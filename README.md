@@ -6,7 +6,7 @@ Share your favorite songs, and see what others are listening to.
 
 • The user can create an account and log in to the application.
 
-• The user can share songs, edit their comments and delete them.
+• The user can share songs, edit their comments, and delete them.
 
 • The user can see the songs added to the application.
 

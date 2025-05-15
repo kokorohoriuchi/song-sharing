@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tilaus</title>
+</head>
+
+<body>
+  <form action="/result" method="post">
+    <p>Valitse pizza:</p>
+    <p>
+      <input type="radio" name="pizza" value="1" /> Frutti di Mare
+      <input type="radio" name="pizza" value="2" /> Margherita
+      <input type="radio" name="pizza" value="3" /> Quattro Formaggi
+      <input type="radio" name="pizza" value="4" /> Quattro Stagioni
+    </p>
+    <p>Valitse lisät:</p>
+    <p>
+      <input type="checkbox" name="extra" value="A" /> oregano
+      <input type="checkbox" name="extra" value="B" /> valkosipuli
+    </p>
+    <p>Erikoistoiveet: <br />
+      <textarea name="message" rows="3" cols="50"></textarea>
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
+</body>
+
+</html> 

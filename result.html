@@ -2,12 +2,23 @@
 <html>
 
 <head>
-  <title>Viesti</title>
+  <title>Valinta</title>
 </head>
 
 <body>
-  <p>Annoit seuraavan viestin:</p>
-  <p>{{ message }}</p>
+  <p>Valitsit pizzan {{ pizza }}</p>
+  <p>
+    Seuraavat lisät:
+    <ul>
+      {% for extra in extras %}
+      <li>{{ extra }}</li>
+      {% endfor %}
+    </ul>
+  </p>
+  <p>
+    Erikoistoiveet: <br />
+    {{ message }}
+  </p>
 </body>
 
 </html> 

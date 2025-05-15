@@ -7,7 +7,7 @@ app = Flask(__name__)
 def form():
     return render_template("form.html")
 
-@app.route("/result", methods=["POST"])
+@app.route("/result", methods=["GET"])
 def result():
     message = request.form["message"]
     return render_template("result.html", message=message) 

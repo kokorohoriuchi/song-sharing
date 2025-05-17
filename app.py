@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import redirect, render_template, request
 import sqlite3
 
 app = Flask(__name__)
@@ -6,9 +7,20 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     db = sqlite3.connect("database.db")
-    db.execute("INSERT INTO visits (visited_at) VALUES (datetime('now'))")
-    db.commit()
-    result = db.execute("SELECT COUNT(*) FROM visits").fetchone()
-    count = result[0]
+    messages = db.execute("SELECT content FROM messages").fetchall()
     db.close()
-    return "Sivua on ladattu " + str(count) + " kertaa"
+    count = len(messages)
+    return render_template("index.html", count=count, messages=messages)
+
+@app.route("/new")
+def new():
+    return render_template("new.html")
+
+@app.route("/send", methods=["POST"])
+def send():
+    content = request.form["content"]
+    db = sqlite3.connect("database.db")
+    db.execute("INSERT INTO messages (content) VALUES (?)", [content])
+    db.commit()
+    db.close()
+    return redirect("/")

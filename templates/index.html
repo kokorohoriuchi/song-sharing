@@ -1,25 +1,6 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <title>Keskustelu</title>
-</head>
-
-<body>
+ {% for message in messages %}
   <p>
-    Viestien määrä: {{ count }}
-  </p>
-  <hr />
-  {% for message in messages %}
-  <p>
-    {{ message[0] }}
+    {{ message.content }}
   </p>
   <hr />
   {% endfor %}
-  
-  <p>
-    <a href="/new">Lähetä viesti</a>
-  </p>
-</body>
-
-</html>

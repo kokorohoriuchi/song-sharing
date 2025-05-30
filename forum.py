@@ -10,7 +10,8 @@ def get_threads():
 
 def get_thread(thread_id):
     sql = "SELECT id, title FROM threads WHERE id = ?"
-    return db.query(sql, [thread_id])[0]
+    result = db.query(sql, [thread_id])
+    return result[0] if result else None
 
 def get_messages(thread_id):
     sql = """SELECT m.id, m.content, m.sent_at, m.user_id, u.username
@@ -21,7 +22,8 @@ def get_messages(thread_id):
 
 def get_message(message_id):
     sql = "SELECT id, content, user_id, thread_id FROM messages WHERE id = ?"
-    return db.query(sql, [message_id])[0]
+    result = db.query(sql, [message_id])
+    return result[0] if result else None
 
 def add_thread(title, content, user_id):
     sql = "INSERT INTO threads (title, user_id) VALUES (?, ?)"

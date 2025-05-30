@@ -1,6 +1,6 @@
 import sqlite3
 from flask import Flask
-from flask import abort, redirect, render_template, request, session
+from flask import abort, make_response, redirect, render_template, request, session
 import config, forum, users
 
 app = Flask(__name__)
@@ -14,6 +14,20 @@ def require_login():
 def index():
     threads = forum.get_threads()
     return render_template("index.html", threads=threads)
+
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = forum.search(query) if query else []
+    return render_template("search.html", query=query, results=results)
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    messages = users.get_messages(user_id)
+    return render_template("user.html", user=user, messages=messages)
 
 @app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):
@@ -50,6 +64,7 @@ def new_message():
         forum.add_message(content, user_id, thread_id)
     except sqlite3.IntegrityError:
         abort(403)
+
     return redirect("/thread/" + str(thread_id))
 
 @app.route("/edit/<int:message_id>", methods=["GET", "POST"])
@@ -129,3 +144,33 @@ def logout():
 
     del session["user_id"]
     return redirect("/")
+
+@app.route("/add_image", methods=["GET", "POST"])
+def add_image():
+    require_login()
+
+    if request.method == "GET":
+        return render_template("add_image.html")
+
+    if request.method == "POST":
+        file = request.files["image"]
+        if not file.filename.endswith(".jpg"):
+            return "VIRHE: väärä tiedostomuoto"
+
+        image = file.read()
+        if len(image) > 100 * 1024:
+            return "VIRHE: liian suuri kuva"
+
+        user_id = session["user_id"]
+        users.update_image(user_id, image)
+        return redirect("/user/" + str(user_id))
+
+@app.route("/image/<int:user_id>")
+def show_image(user_id):
+    image = users.get_image(user_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response

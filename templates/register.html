@@ -2,14 +2,16 @@
 <html>
 
 <head>
-  <title>Rekisteröinti</title>
+  <title>Luo tunnus</title>
 </head>
 
 <body>
-  <form action="/create" method="post">
+  <h1>Luo tunnus</h1>
+
+  <form action="/new_user" method="post">
     <p>
       Tunnus: <br />
-      <input type="text" name="username" />
+      <input type="text" name="username" maxlength="16" required />
     </p>
     <p>
       Salasana: <br />
@@ -21,6 +23,11 @@
     </p>
     <input type="submit" value="Luo tunnus" />
   </form>
+
+  <hr />
+  <p>
+    <a href="/">Etusivulle</a>
+  </p>
 </body>
 
 </html>

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}Haku{% endblock%}
+
+{% block content %}
+
+<h2>Haku</h2>
+
+<form action="/search" method="get">
+  <p>
+    <label for="query">Hakusana</label>:
+    {% if query %}
+    <input type="text" id="query" name="query" value="{{ query }}" />
+    {% else %}
+    <input type="text" id="query" name="query" />
+    {% endif %}
+  </p>
+  <input type="submit" value="Hae" />
+</form>
+
+{% if query %}
+<h3>Tulokset</h3>
+
+<ul>
+{% for result in results %}
+  <li>
+    <a href="/thread/{{ result.thread_id }}#{{ result.message_id }}">
+      {{ result.thread_title }}
+    </a>
+    <br />
+    {{ result.username }} ({{ result.sent_at }})
+  </li>  
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

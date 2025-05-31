@@ -1,20 +1,16 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
+{% block title %}Muokkaa viestiä{% endblock %}
+{% block content %}
 
-<head>
-  <title>Viestin muokkaus</title>
-</head>
+<h2>Muokkaa viestiä</a>
 
-<body>
-  <h1>Viestin muokkaus</h1>
+<form action="/edit/{{ message.id }}" method="post">
+  <p>
+    <label for="content">Viesti</label>:<br />
+    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000">{{ message.content }}</textarea>
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Lähetä" />
+</form>
 
-  <form action="/edit/{{ message.id }}" method="post">
-    <p>
-      Viesti:<br />
-      <textarea name="content" rows="5" cols="40">{{ message.content }}</textarea>
-    </p>
-    <input type="submit" value="Lähetä" />
-  </form>
-</body>
-
-</html>
+{% endblock %}

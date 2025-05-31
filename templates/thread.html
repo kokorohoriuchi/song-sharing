@@ -10,8 +10,9 @@
 
   <hr />
   {% for message in messages %}
-  <p>
-    {{ message.username }} ({{ message.sent_at }}):
+  <p id="{{ message.id }}">
+    <a href="/user/{{ message.user_id }}">{{ message.username }}</a>
+    ({{ message.sent_at }}):
   </p>
   <p>
     {{ message.content }}
@@ -31,9 +32,10 @@
   <form action="/new_message" method="post">
     <p>
       Viesti:<br />
-      <textarea name="content" rows="5" cols="40"></textarea>
+      <textarea name="content" rows="5" cols="40" maxlength="5000"></textarea>
     </p>
     <input type="hidden" name="thread_id" value="{{ thread.id }}" />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Lähetä" />
   </form>
   <hr />

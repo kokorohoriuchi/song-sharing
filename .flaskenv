@@ -1,3 +1,3 @@
 FLASK_APP=app.py
 FLASK_ENV=development
-SECRET_KEY=your-secret-key-here
+SECRET_KEY=c5a2a1310444f40c6273d61b73d5777c1e3ea123cf6e0d525f1bc1270d5cb603

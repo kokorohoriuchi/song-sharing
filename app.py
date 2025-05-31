@@ -1,10 +1,17 @@
 import math, secrets, sqlite3
 from flask import Flask
-from flask import abort, make_response, redirect, render_template, request, session
+from flask import abort, flash, make_response, redirect, render_template, request, session
+import markupsafe
 import config, forum, users
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 def require_login():
     if "user_id" not in session:
@@ -120,10 +127,11 @@ def remove_message(message_id):
             forum.remove_message(message["id"])
         return redirect("/thread/" + str(message["thread_id"]))
 
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
-        return render_template("register.html")
+        return render_template("register.html", filled={})
 
     if request.method == "POST":
         username = request.form["username"]
@@ -133,30 +141,37 @@ def register():
         password2 = request.form["password2"]
 
         if password1 != password2:
-            return "VIRHE: salasanat eivät ole samat"
+            flash("VIRHE: Antamasi salasanat eivät ole samat")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
 
         try:
             users.create_user(username, password1)
-            return "Tunnus luotu"
+            flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
+            return redirect("/")
         except sqlite3.IntegrityError:
-            return "VIRHE: tunnus on jo varattu"
+            flash("VIRHE: Valitsemasi tunnus on jo varattu")
+            filled = {"username": username}
+            return render_template("register.html", filled=filled)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("login.html", next_page=request.referrer)
 
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        next_page = request.form["next_page"]
 
         user_id = users.check_login(username, password)
         if user_id:
             session["user_id"] = user_id
             session["csrf_token"] = secrets.token_hex(16)
-            return redirect("/")
+            return redirect(next_page)
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            flash("VIRHE: Väärä tunnus tai salasana")
+            return render_template("login.html", next_page=next_page)
 
 @app.route("/logout")
 def logout():
@@ -177,14 +192,17 @@ def add_image():
 
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
-            return "VIRHE: väärä tiedostomuoto"
+            flash("VIRHE: Lähettämäsi tiedosto ei ole jpg-tiedosto")
+            return redirect("/add_image")
 
         image = file.read()
         if len(image) > 100 * 1024:
-            return "VIRHE: liian suuri kuva"
+            flash("VIRHE: Lähettämäsi tiedosto on liian suuri")
+            return redirect("/add_image")
 
         user_id = session["user_id"]
         users.update_image(user_id, image)
+        flash("Kuvan lisääminen onnistui")
         return redirect("/user/" + str(user_id))
 
 @app.route("/image/<int:user_id>")

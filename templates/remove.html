@@ -1,20 +1,18 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Viestin poisto</title>
-</head>
+{% block title %}Poista viesti{% endblock %}
 
-<body>
-  <h1>Viestin poisto</h1>
+{% block content %}
 
-  <form action="/remove/{{ message.id }}" method="post">
-    <p>
-      Haluatko varmasti poistaa viestin?
-    </p>
-    <input type="submit" name="continue" value="Jatka" />
-    <input type="submit" name="cancel" value="Peruuta" />
-  </form>
-</body>
+<h2>Poista viesti</h2>
 
-</html>
+<form action="/remove/{{ message.id }}" method="post">
+  <p>
+    Haluatko varmasti poistaa viestin?
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" name="continue" value="Jatka" />
+  <input type="submit" name="cancel" value="Peruuta" />
+</form>
+
+{% endblock %}

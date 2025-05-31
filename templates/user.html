@@ -1,55 +1,52 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Käyttäjä {{ user.username }}</title>
-</head>
+{% block title %}Käyttäjä {{ user.username }}{% endblock %}
 
-<body>
-  <h1>Käyttäjä {{ user.username }}</h1>
+{% block content %}
 
-  {% for message in get_flashed_messages() %}
-  <p>
-    <b>{{ message }}</b>
-  </p>
-  {% endfor %}
+<h2>Käyttäjä {{ user.username }}</h2>
 
-  {% if user.has_image %}
-  <img src="/image/{{ user.id }}" alt="Käyttäjän {{ user.username }} kuva">
-  {% endif %}
+{% for message in get_flashed_messages() %}
+<p class="info">
+  {{ message }}
+</p>
+{% endfor %}
 
-  {% if user.id == session.user_id %}
-  <p>
-    <a href="/add_image">Lisää profiilikuva</a>
-  </p>
-  {% endif %}
+{% if user.has_image %}
+<img src="/image/{{ user.id }}" alt="Käyttäjän {{ user.username }} kuva">
+{% endif %}
 
-  <p>
-    Käyttäjä on lähettänyt {{ messages | count }} viestiä
-  </p>
+{% if user.id == session.user_id %}
+<p>
+  <a href="/add_image">Lisää profiilikuva</a>
+</p>
+{% endif %}
 
-  {% if messages %}
-  <p>
-    Ensimmäinen viesti lähetetty {{ messages[-1].sent_at }}
-  </p>
-  <p>
-    Viimeisin viesti lähetetty {{ messages[0].sent_at }}
-  </p>
-  {% endif %}
+<p>
+  Käyttäjä on lähettänyt {{ messages | count }} viestiä
+</p>
 
-  <h2>Viestit</h2>
+{% if messages %}
+<p>
+  Ensimmäinen viesti lähetetty {{ messages[-1].sent_at }}
+</p>
+<p>
+  Viimeisin viesti lähetetty {{ messages[0].sent_at }}
+</p>
+{% endif %}
 
-  <ul>
-  {% for message in messages %}
-    <li>
-      <a href="/thread/{{ message.thread_id }}#{{ message.id }}">
-        {{ message.thread_title }}
-      </a>
-      <br />
-      ({{ message.sent_at }})
-    </li>  
-  {% endfor %}
-  </ul>
-</body>
+<h3>Viestit</h3>
 
-</html>
+<ul>
+{% for message in messages %}
+  <li>
+    <a href="/thread/{{ message.thread_id }}#{{ message.id }}">
+      {{ message.thread_title }}
+    </a>
+    <br />
+    ({{ message.sent_at }})
+  </li>  
+{% endfor %}
+</ul>
+
+{% endblock %}

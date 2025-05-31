@@ -1,55 +1,49 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Keskustelu</title>
-</head>
+{% block title %}Keskustelu{% endblock %}
 
-<body>
-  <h1>Keskustelu</h1>
+{% block content %}
 
-  <p>
-    <a href="/search">Haku</a> |
-    <a href="/register">Luo tunnus</a> |
-    {% if session.user_id %}
-    <a href="/logout">Kirjaudu ulos</a>
-    {% else %}
-    <a href="/login">Kirjaudu sisään</a>
-    {% endif %}
-  </p>
+<h2>Etusivu</h2>
 
-  <hr />
-  {% for thread in threads %}
+{% for message in get_flashed_messages() %}
+<p class="info">
+  {{ message }}
+</p>
+{% endfor %}
+
+{% for thread in threads %}
+<div class="thread">
   <p>
     <a href="/thread/{{ thread.id }}">{{ thread.title }}</a>
-    <br />
+  </p>
+  <p>
     {{ thread.total }} viestiä, uusin {{ thread.last }}
   </p>
-  <hr />
-  {% endfor %}
+</div>
+{% endfor %}
 
+<p class="page-nav">
+  <a href="/{{ page - 1 }}">&lt;&lt;</a>
+  Sivu {{ page }}/{{ page_count }}
+  <a href="/{{ page + 1 }}">&gt;&gt;</a>
+</p>
+
+{% if session.user_id %}
+<h3>Uusi ketju</h3>
+
+<form action="/new_thread" method="post">
   <p>
-    <a href="/{{ page - 1 }}">&lt;&lt;</a>
-    Sivu {{ page }}/{{ page_count }}
-    <a href="/{{ page + 1 }}">&gt;&gt;</a>
+    <label for="title">Otsikko</label>:<br />
+    <input type="text" id="title" name="title" maxlength="100" required />
   </p>
-  <hr />
+  <p>
+    <label for="content">Viesti</label>:<br />
+    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Lähetä" />
+</form>
+{% endif %}
 
-  {% if session.user_id %}
-  <h2>Uusi ketju</h2>
-
-  <form action="/new_thread" method="post">
-    <p>
-      Otsikko:<br />
-      <input type="text" name="title" maxlength="100" required />
-    </p>
-    <p>
-      Viesti:<br />
-      <textarea name="content" rows="5" cols="40" maxlength="5000"></textarea>
-    </p>
-    <input type="submit" value="Lähetä" />
-  </form>
-  {% endif %}
-</body>
-
-</html>
+{% endblock %}

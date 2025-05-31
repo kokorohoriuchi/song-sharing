@@ -1,26 +1,17 @@
-import math, sqlite3
+import math, secrets, sqlite3
 from flask import Flask
 from flask import abort, make_response, redirect, render_template, request, session
 import config, forum, users
 
-import time
-from flask import g
-
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
-@app.before_request
-def before_request():
-    g.start_time = time.time()
-
-@app.after_request
-def after_request(response):
-    elapsed_time = round(time.time() - g.start_time, 2)
-    print("elapsed time:", elapsed_time, "s")
-    return response
-
 def require_login():
     if "user_id" not in session:
+        abort(403)
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
 @app.route("/")
@@ -63,6 +54,7 @@ def show_thread(thread_id):
 
 @app.route("/new_thread", methods=["POST"])
 def new_thread():
+    check_csrf()
     require_login()
 
     title = request.form["title"]
@@ -76,6 +68,7 @@ def new_thread():
 
 @app.route("/new_message", methods=["POST"])
 def new_message():
+    check_csrf()
     require_login()
 
     content = request.form["content"]
@@ -103,6 +96,7 @@ def edit_message(message_id):
         return render_template("edit.html", message=message)
 
     if request.method == "POST":
+        check_csrf()
         content = request.form["content"]
         if len(content) > 5000:
             abort(403)
@@ -121,6 +115,7 @@ def remove_message(message_id):
         return render_template("remove.html", message=message)
 
     if request.method == "POST":
+        check_csrf()
         if "continue" in request.form:
             forum.remove_message(message["id"])
         return redirect("/thread/" + str(message["thread_id"]))
@@ -158,6 +153,7 @@ def login():
         user_id = users.check_login(username, password)
         if user_id:
             session["user_id"] = user_id
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             return "VIRHE: väärä tunnus tai salasana"
@@ -177,6 +173,8 @@ def add_image():
         return render_template("add_image.html")
 
     if request.method == "POST":
+        check_csrf()
+
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
             return "VIRHE: väärä tiedostomuoto"

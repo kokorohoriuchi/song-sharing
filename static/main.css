@@ -1,0 +1,70 @@
+body {
+  margin: auto;
+  max-width: 50em;
+  font-family: sans-serif;
+  background-color: lightblue;
+}
+
+.header {
+  background-color: black;
+  color: red;
+  margin: 0.5em 0;
+  padding: 1em;
+}
+
+.nav {
+  background-color: lightgrey;
+  margin: 0.5em 0;
+  padding: 0.5em;
+}
+
+.content {
+  background-color: white;
+  margin: 0.5em 0;
+  padding: 1em;
+}
+
+h1, h2 {
+  margin: 0;
+}
+
+nav {
+  text-align: center;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  display: inline-block;
+  padding: 0 1em;
+  margin: 0;
+}
+
+nav li:not(:first-of-type) {
+  margin-left: -0.25em;
+}
+
+nav li:not(:last-of-type) {
+  border-right: 1px solid black;
+}
+
+.page-nav {
+  text-align: center;
+}
+
+.message, .thread {
+  border: 2px solid black;
+  margin: 1em;
+  padding: 0.2em 0.5em;
+}
+
+.info {
+  border: 2px solid black;
+  margin: 1em;
+  padding: 0.5em;
+  background-color: blue;
+  color: white;
+}

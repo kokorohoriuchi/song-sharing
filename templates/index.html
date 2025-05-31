@@ -9,6 +9,7 @@
   <h1>Keskustelu</h1>
 
   <p>
+    <a href="/search">Haku</a> |
     <a href="/register">Luo tunnus</a> |
     {% if session.user_id %}
     <a href="/logout">Kirjaudu ulos</a>
@@ -27,17 +28,24 @@
   <hr />
   {% endfor %}
 
+  <p>
+    <a href="/{{ page - 1 }}">&lt;&lt;</a>
+    Sivu {{ page }}/{{ page_count }}
+    <a href="/{{ page + 1 }}">&gt;&gt;</a>
+  </p>
+  <hr />
+
   {% if session.user_id %}
   <h2>Uusi ketju</h2>
 
   <form action="/new_thread" method="post">
     <p>
       Otsikko:<br />
-      <input type="text" name="title" />
+      <input type="text" name="title" maxlength="100" required />
     </p>
     <p>
       Viesti:<br />
-      <textarea name="content" rows="5" cols="40"></textarea>
+      <textarea name="content" rows="5" cols="40" maxlength="5000"></textarea>
     </p>
     <input type="submit" value="Lähetä" />
   </form>

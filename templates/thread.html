@@ -1,53 +1,45 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ thread.title }}</title>
-</head>
+{% block title %}{{ thread.title }}{% endblock %}
 
-<body>
-  <h1>{{ thread.title }}</h1>
+{% block content %}
 
-  <hr />
-  {% for message in messages %}
+<h2>{{ thread.title }}</h2>
+
+{% for message in messages %}
+<div class="message">
   <p id="{{ message.id }}">
     <a href="/user/{{ message.user_id }}">{{ message.username }}</a>
-    ({{ message.sent_at }}):
+    ({{ message.sent_at }})
   </p>
   <p>
     {{ message.content | show_lines }}
   </p>
   {% if message.user_id == session.user_id %}
   <p>
-    <a href="/edit/{{ message.id }}">Muokkaa</a> |
+    <a href="/edit/{{ message.id }}">Muokkaa</a>
     <a href="/remove/{{ message.id }}">Poista</a>
   </p>
   {% endif %}
-  <hr />
-  {% endfor %}
+</div>
+{% endfor %}
 
-  {% if session.user_id %}
-  <h2>Uusi viesti</h2>
+{% if session.user_id %}
+<h3>Uusi viesti</h3>
 
-  <form action="/new_message" method="post">
-    <p>
-      <label for="content">Viesti</label>:<br />
-      <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
-    </p>
-    <input type="hidden" name="thread_id" value="{{ thread.id }}" />
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä" />
-  </form>
-  <hr />
-  {% else %}
+<form action="/new_message" method="post">
   <p>
-    Jos haluat lähettää vastauksen, <a href="/login">kirjaudu sisään</a> ensin
+    <label for="content">Viesti</label>:<br />
+    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
   </p>
-  {% endif %}
+  <input type="hidden" name="thread_id" value="{{ thread.id }}" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Lähetä" />
+</form>
+{% else %}
+<p>
+  Jos haluat lähettää vastauksen, <a href="/login">kirjaudu sisään</a> ensin
+</p>
+{% endif %}
 
-  <p>
-    <a href="/">Etusivulle</a>
-  </p>
-</body>
-
-</html>
+{% endblock %}

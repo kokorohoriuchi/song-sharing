@@ -17,3 +17,5 @@ Share your favorite songs, and see what others are listening to.
 • The user can select one or more classifications for the song (e.g. genre, style, non-explicit, length).
 
 • The user can give a comment and a rating to a shared song. The comments and average rating are displayed for the shared song. 
+
+On May 31st, the app is in progress.

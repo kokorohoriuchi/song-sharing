@@ -1,40 +1,32 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Kirjaudu sisään</title>
-</head>
+{% block title %}Kirjaudu sisään{% endblock %}
 
-<body>
-  <h1>Kirjaudu sisään</h1>
+{% block content %}
 
-  {% for message in get_flashed_messages() %}
+<h2>Kirjaudu sisään</h2>
+
+{% for message in get_flashed_messages() %}
+<p class="info">
+  {{ message }}
+</p>
+{% endfor %}
+
+<form action="/login" method="post">
   <p>
-    <b>{{ message }}</b>
+    <label for="username">Tunnus:</label><br />
+    <input type="text" id="username" name="username" />
   </p>
-  {% endfor %}
-
-  <form action="/login" method="post">
-    <p>
-      <label for="username">Tunnus:</label><br />
-      <input type="text" id="username" name="username" />
-    </p>
-    <p>
-      <label for="password">Salasana</label>:<br />
-      <input type="password" id="password" name="password" />
-    </p>
-    {% if next_page %}
-    <input type="hidden" name="next_page" value="{{ next_page }}" />
-    {% else %}
-    <input type="hidden" name="next_page" value="/" />
-    {% endif %}
-    <input type="submit" value="Kirjaudu" />
-  </form>
-
-  <hr />
   <p>
-    <a href="/">Etusivulle</a>
+    <label for="password">Salasana</label>:<br />
+    <input type="password" id="password" name="password" />
   </p>
-</body>
+  {% if next_page %}
+  <input type="hidden" name="next_page" value="{{ next_page }}" />
+  {% else %}
+  <input type="hidden" name="next_page" value="/" />
+  {% endif %}
+  <input type="submit" value="Kirjaudu" />
+</form>
 
-</html>
+{% endblock %}

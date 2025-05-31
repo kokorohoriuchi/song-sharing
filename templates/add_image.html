@@ -1,31 +1,28 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Lisää profiilikuva</title>
-</head>
+{% block title %}Lisää profiilikuva{% endblock %}
 
-<body>
-  <h1>Lisää profiilikuva</h1>
+{% block content %}
 
+<h2>Lisää profiilikuva</h2>
+
+<p>
+  Lähetä jpg-tiedosto, jonka koko on enintään 100 kt
+</p>
+
+{% for message in get_flashed_messages() %}
+<p class="info">
+  {{ message }}
+</p>
+{% endfor %}
+
+<form action="/add_image" method="post" enctype="multipart/form-data">
   <p>
-    Lähetä jpg-tiedosto, jonka koko on enintään 100 kt
+    <label for="image">Kuva:</label>
+    <input type="file" id="image" name="image" accept=".jpg" />
   </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Lähetä" />
+</form>
 
-  {% for message in get_flashed_messages() %}
-  <p>
-    <b>{{ message }}</b>
-  </p>
-  {% endfor %}
-
-  <form action="/add_image" method="post" enctype="multipart/form-data">
-    <p>
-      <label for="image">Kuva:</label>
-      <input type="file" id="image" name="image" accept=".jpg" />
-    </p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Lähetä" />
-  </form>
-</body>
-
-</html>
+{% endblock %}

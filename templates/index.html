@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 
-{% block title %}Keskustelu{% endblock %}
+{% block title %}Discussion{% endblock %}
 
 {% block content %}
 
-<h2>Etusivu</h2>
+<h2>Front Page</h2>
 
 {% for message in get_flashed_messages() %}
 <p class="info">
@@ -18,31 +18,31 @@
     <a href="/thread/{{ thread.id }}">{{ thread.title }}</a>
   </p>
   <p>
-    {{ thread.total }} viestiä, uusin {{ thread.last }}
+    {{ thread.total }} messages, latest {{ thread.last }}
   </p>
 </div>
 {% endfor %}
 
 <p class="page-nav">
   <a href="/{{ page - 1 }}">&lt;&lt;</a>
-  Sivu {{ page }}/{{ page_count }}
+  Page {{ page }}/{{ page_count }}
   <a href="/{{ page + 1 }}">&gt;&gt;</a>
 </p>
 
 {% if session.user_id %}
-<h3>Uusi ketju</h3>
+<h3>New chain</h3>
 
 <form action="/new_thread" method="post">
   <p>
-    <label for="title">Otsikko</label>:<br />
+    <label for="title">Title</label>:<br />
     <input type="text" id="title" name="title" maxlength="100" required />
   </p>
   <p>
-    <label for="content">Viesti</label>:<br />
+    <label for="content">Message</label>:<br />
     <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
   </p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Lähetä" />
+  <input type="submit" value="Submit" />
 </form>
 {% endif %}
 

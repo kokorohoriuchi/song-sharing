@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% block title %}Lisää profiilikuva{% endblock %}
+{% block title %}Add a profile picture{% endblock %}
 
 {% block content %}
 
-<h2>Lisää profiilikuva</h2>
+<h2>Add a profile picture</h2>
 
 <p>
-  Lähetä jpg-tiedosto, jonka koko on enintään 100 kt
+  Please upload a jpg file no larger than 100KB
 </p>
 
 {% for message in get_flashed_messages() %}
@@ -18,11 +18,11 @@
 
 <form action="/add_image" method="post" enctype="multipart/form-data">
   <p>
-    <label for="image">Kuva:</label>
+    <label for="image">Picture:</label>
     <input type="file" id="image" name="image" accept=".jpg" />
   </p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Lähetä" />
+  <input type="submit" value="Submit" />
 </form>
 
 {% endblock %}

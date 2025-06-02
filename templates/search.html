@@ -1,25 +1,25 @@
 {% extends "layout.html" %}
 
-{% block title %}Haku{% endblock%}
+{% block title %}Search{% endblock%}
 
 {% block content %}
 
-<h2>Haku</h2>
+<h2>Search</h2>
 
 <form action="/search" method="get">
   <p>
-    <label for="query">Hakusana</label>:
+    <label for="query">Entry</label>:
     {% if query %}
     <input type="text" id="query" name="query" value="{{ query }}" />
     {% else %}
     <input type="text" id="query" name="query" />
     {% endif %}
   </p>
-  <input type="submit" value="Hae" />
+  <input type="submit" value="Search" />
 </form>
 
 {% if query %}
-<h3>Tulokset</h3>
+<h3>Results</h3>
 
 <ul>
 {% for result in results %}

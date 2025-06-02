@@ -9,19 +9,19 @@
 <body>
 
   <div class="header">
-    <h1>Keskustelu</h1>
+    <h1>Discussion</h1>
   </div>
 
   <div class="nav">
     <nav>
       <ul>
-        <li><a href="/">Etusivu</a></li>
-        <li><a href="/search">Haku</a></li>
-        <li><a href="/register">Luo tunnus</a></li>
+        <li><a href="/">Front page</a></li>
+        <li><a href="/search">Search</a></li>
+        <li><a href="/register">Register</a></li>
         {% if session.user_id %}
-        <li><a href="/logout">Kirjaudu ulos</a></li>
+        <li><a href="/logout">Logout</a></li>
         {% else %}
-        <li><a href="/login">Kirjaudu sisään</a></li>
+        <li><a href="/login">Login</a></li>
         {% endif %}
       </ul>
     </nav>

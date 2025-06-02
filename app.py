@@ -141,16 +141,16 @@ def register():
         password2 = request.form["password2"]
 
         if password1 != password2:
-            flash("VIRHE: Antamasi salasanat eivät ole samat")
+            flash("ERROR: The passwords you entered are not the same.")
             filled = {"username": username}
             return render_template("register.html", filled=filled)
 
         try:
             users.create_user(username, password1)
-            flash("Tunnuksen luominen onnistui, voit nyt kirjautua sisään")
+            flash("Your account was created successfully, you can now log in.")
             return redirect("/")
         except sqlite3.IntegrityError:
-            flash("VIRHE: Valitsemasi tunnus on jo varattu")
+            flash("ERROR: The ID you selected is already taken.")
             filled = {"username": username}
             return render_template("register.html", filled=filled)
 
@@ -170,7 +170,7 @@ def login():
             session["csrf_token"] = secrets.token_hex(16)
             return redirect(next_page)
         else:
-            flash("VIRHE: Väärä tunnus tai salasana")
+            flash("ERROR: Incorrect ID or password")
             return render_template("login.html", next_page=next_page)
 
 @app.route("/logout")
@@ -192,17 +192,17 @@ def add_image():
 
         file = request.files["image"]
         if not file.filename.endswith(".jpg"):
-            flash("VIRHE: Lähettämäsi tiedosto ei ole jpg-tiedosto")
+            flash("ERROR: The file you sent is not a jpg file")
             return redirect("/add_image")
 
         image = file.read()
         if len(image) > 100 * 1024:
-            flash("VIRHE: Lähettämäsi tiedosto on liian suuri")
+            flash("ERROR: The file you sent is too large")
             return redirect("/add_image")
 
         user_id = session["user_id"]
         users.update_image(user_id, image)
-        flash("Kuvan lisääminen onnistui")
+        flash("Image added successfully")
         return redirect("/user/" + str(user_id))
 
 @app.route("/image/<int:user_id>")

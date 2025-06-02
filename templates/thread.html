@@ -17,28 +17,28 @@
   </p>
   {% if message.user_id == session.user_id %}
   <p>
-    <a href="/edit/{{ message.id }}">Muokkaa</a>
-    <a href="/remove/{{ message.id }}">Poista</a>
+    <a href="/edit/{{ message.id }}">Edit</a>
+    <a href="/remove/{{ message.id }}">Delete</a>
   </p>
   {% endif %}
 </div>
 {% endfor %}
 
 {% if session.user_id %}
-<h3>Uusi viesti</h3>
+<h3>New message</h3>
 
 <form action="/new_message" method="post">
   <p>
-    <label for="content">Viesti</label>:<br />
+    <label for="content">Message</label>:<br />
     <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
   </p>
   <input type="hidden" name="thread_id" value="{{ thread.id }}" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Lähetä" />
+  <input type="submit" value="Submit" />
 </form>
 {% else %}
 <p>
-  Jos haluat lähettää vastauksen, <a href="/login">kirjaudu sisään</a> ensin
+  If you want to send a reply, <a href="/login">login</a> first
 </p>
 {% endif %}
 

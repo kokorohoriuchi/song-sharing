@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 
-{% block title %}Edit Song{% endblock %}
+{% block title %}Edit Post{% endblock %}
 
 {% block content %}
-<h1>Edit Song</h1>
+<h1>Edit Post</h1>
 
 <form action="/songs/{{ song.id }}/edit" method="POST">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">

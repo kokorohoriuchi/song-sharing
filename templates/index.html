@@ -29,6 +29,30 @@
   <a href="/{{ page + 1 }}">&gt;&gt;</a>
 </p>
 
+<div class="songs-section mt-5">
+    <h2>Song Library</h2>
+    <a href="/songs" class="btn btn-primary mb-3">View All Songs</a>
+    
+    <div class="row">
+        {% for song in recent_songs %}
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ song.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ song.artist }}</h6>
+                    <div class="genres mb-2">
+                        {% for genre in song.genres %}
+                        <span class="badge bg-primary">{{ genre.name }}</span>
+                        {% endfor %}
+                    </div>
+                    <a href="/songs/{{ song.id }}/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
 {% if session.user_id %}
 <h3>New post</h3>
 

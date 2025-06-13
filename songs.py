@@ -1,4 +1,4 @@
-from db import execute, query
+from db import execute, query, last_insert_id
 
 def add_song(title, artist, user_id):
     """Add a new song"""
@@ -11,19 +11,20 @@ def add_song(title, artist, user_id):
 def get_song(song_id):
     """Get a song by ID"""
     result = query(
-        "SELECT id, title, artist, user_id FROM songs WHERE id = ?",
+        "SELECT s.id, s.title, s.artist, s.user_id, u.username "
+        "FROM songs s JOIN users u ON s.user_id = u.id "
+        "WHERE s.id = ?",
         [song_id]
     )
     return result[0] if result else None
 
 def get_all_songs():
     """Get all songs with the classifications"""
-    songs = query("""
-        SELECT s.id, s.title, s.artist, s.user_id, u.username
-        FROM songs s
-        JOIN users u ON s.user_id = u.id
-        ORDER BY s.title
-    """)
+    songs = query(
+        "SELECT s.id, s.title, s.artist, s.user_id, u.username "
+        "FROM songs s JOIN users u ON s.user_id = u.id "
+        "ORDER BY s.title"
+    )
     
     for song in songs:
         song["genres"] = classification.get_song_genres(song["id"])

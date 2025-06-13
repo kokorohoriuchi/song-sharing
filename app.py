@@ -15,13 +15,88 @@ app.secret_key = config.secret_key
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['DATABASE'] = os.path.join(basedir, 'instance', 'database.db')
 init_db(app)
+
 @app.cli.command("init-db")
 @with_appcontext
 def init_db_command():
     """Initialize the database"""
-    from classifications import initialize_classification_tables
-    initialize_classification_tables()
-    click.echo("Initialized the database.")
+    # Create all tables
+    execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            image BLOB
+        )
+    """)
+    
+    execute("""
+        CREATE TABLE IF NOT EXISTS threads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            user_id INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+    
+    execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            content TEXT NOT NULL,
+            sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            user_id INTEGER NOT NULL,
+            thread_id INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (thread_id) REFERENCES threads(id)
+        )
+    """)
+    
+    execute("""
+        CREATE TABLE IF NOT EXISTS songs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            artist TEXT NOT NULL,
+            user_id INTEGER NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+    
+    execute("""
+        CREATE TABLE IF NOT EXISTS genres (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+        )
+    """)
+    
+    execute("""
+        CREATE TABLE IF NOT EXISTS styles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE
+        )
+    """)
+    
+    execute("""
+        CREATE TABLE IF NOT EXISTS song_classifications (
+            song_id INTEGER NOT NULL,
+            genre_id INTEGER,
+            style_id INTEGER,
+            FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE,
+            FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE,
+            FOREIGN KEY (style_id) REFERENCES styles(id) ON DELETE CASCADE,
+            PRIMARY KEY (song_id, genre_id, style_id)
+        )
+    """)
+    
+    default_genres = ['pop', 'hiphop', 'rap', 'electronic', 'indie', 'country', 'jazz', 'R&B', 'rock']
+    for genre in default_genres:
+        execute("INSERT OR IGNORE INTO genres (name) VALUES (?)", [genre])
+    
+    default_styles = ['industrial', 'blues', 'alternative', 'underground', 'lo-fi', 'instrumental']
+    for style in default_styles:
+        execute("INSERT OR IGNORE INTO styles (name) VALUES (?)", [style])
+    
+    click.echo("Initialized the database with all tables")
 
 @app.template_filter()
 def show_lines(content):
@@ -40,19 +115,23 @@ def check_csrf():
 @app.route("/")
 @app.route("/<int:page>")
 def index(page=1):
-    thread_count = forum.thread_count()
-    page_size = 10
-    page_count = math.ceil(thread_count / page_size)
-    page_count = max(page_count, 1)
+    try:
+        thread_count = forum.thread_count()
+        page_size = 10
+        page_count = math.ceil(thread_count / page_size)
+        page_count = max(page_count, 1)
 
-    if page < 1:
-        return redirect("/1")
-    if page > page_count:
-        return redirect("/" + str(page_count))
+        if page < 1:
+            return redirect("/1")
+        if page > page_count:
+            return redirect("/" + str(page_count))
 
-    threads = forum.get_threads(page, page_size)
-    return render_template("index.html", page=page, page_count=page_count, threads=threads)
-
+        threads = forum.get_threads(page, page_size)
+        return render_template("index.html", page=page, page_count=page_count, threads=threads)
+    except sqlite3.OperationalError as e:
+        flash("Database error. Please contact admin.")
+        return render_template("error.html", error=str(e)), 500
+        
 @app.route("/search")
 def search():
     query = request.args.get("query")

@@ -9,8 +9,9 @@ from db import init_app
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
-classifications.initialize_classification_tables()
 init_app(app)
+with app.app_context():
+    classifications.initialize_classification_tables()
 
 @app.template_filter()
 def show_lines(content):

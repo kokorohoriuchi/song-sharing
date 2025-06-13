@@ -8,6 +8,7 @@ import songs
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+classification.initialize_classification_tables()
 
 @app.template_filter()
 def show_lines(content):

@@ -8,7 +8,7 @@ import songs
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
-classification.initialize_classification_tables()
+classifications.initialize_classification_tables()
 
 @app.template_filter()
 def show_lines(content):
@@ -229,8 +229,8 @@ def add_song():
     require_login()
     
     if request.method == "GET":
-        genres = classification.get_all_genres()
-        styles = classification.get_all_styles()
+        genres = classifications.get_all_genres()
+        styles = classifications.get_all_styles()
         return render_template("songs/add.html", genres=genres, styles=styles)
     
     if request.method == "POST":
@@ -252,7 +252,7 @@ def add_song():
                 user_id=session["user_id"]
             )
             
-            classification.update_song_classifications(song_id, genre_ids, style_ids)
+            classifications.update_song_classifications(song_id, genre_ids, style_ids)
             
             flash("Song added successfully")
             return redirect("/songs")
@@ -269,10 +269,10 @@ def edit_song(song_id):
         abort(403)
     
     if request.method == "GET":
-        genres = classification.get_all_genres()
-        styles = classification.get_all_styles()
-        current_genres = [g["id"] for g in classification.get_song_genres(song_id)]
-        current_styles = [s["id"] for s in classification.get_song_styles(song_id)]
+        genres = classifications.get_all_genres()
+        styles = classifications.get_all_styles()
+        current_genres = [g["id"] for g in classifications.get_song_genres(song_id)]
+        current_styles = [s["id"] for s in classifications.get_song_styles(song_id)]
         
         return render_template(
             "songs/edit.html",
@@ -302,7 +302,7 @@ def edit_song(song_id):
                 artist=artist
             )
             
-            classification.update_song_classifications(song_id, genre_ids, style_ids)
+            classifications.update_song_classifications(song_id, genre_ids, style_ids)
             
             flash("Song updated successfully")
             return redirect("/songs")

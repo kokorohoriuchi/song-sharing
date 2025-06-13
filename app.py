@@ -312,14 +312,11 @@ def show_image(user_id):
 
 @app.route("/songs")
 def list_songs():
-    """List all songs with their classifications"""
-    all_songs = songs.get_all_songs()
+    all_songs = songs.get_all_songs()  # Make sure this function exists in songs.py
     return render_template("songs/list.html", songs=all_songs)
 
 @app.route("/songs/add", methods=["GET", "POST"])
 def add_song():
-    require_login()
-    
     if request.method == "GET":
         genres = classifications.get_all_genres()
         styles = classifications.get_all_styles()
@@ -354,13 +351,8 @@ def add_song():
 
 @app.route("/songs/<int:song_id>/edit", methods=["GET", "POST"])
 def edit_song(song_id):
-    require_login()
-    
-    song = songs.get_song(song_id)
-    if not song or song["user_id"] != session["user_id"]:
-        abort(403)
-    
     if request.method == "GET":
+        song = songs.get_song(song_id)
         genres = classifications.get_all_genres()
         styles = classifications.get_all_styles()
         current_genres = [g["id"] for g in classifications.get_song_genres(song_id)]

@@ -1,0 +1,166 @@
+/* Song Listing Styles */
+.song-list {
+    margin-top: 2rem;
+}
+
+.song.card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: box-shadow 0.3s ease;
+}
+
+.song.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.card-subtitle {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #4a89dc;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.1);
+}
+
+/* Checkbox Groups */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+    width: 1.1em;
+    height: 1.1em;
+}
+
+.form-check-label {
+    user-select: none;
+}
+
+/* Badges for Genres/Styles */
+.badge {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 600;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 10px;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.bg-primary {
+    background-color: #4a89dc;
+    color: white;
+}
+
+.bg-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background-color: #4a89dc;
+    color: white;
+    border-color: #3a79d4;
+}
+
+.btn-primary:hover {
+    background-color: #3a79d4;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border-color: #5a6268;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-outline-primary {
+    background-color: transparent;
+    color: #4a89dc;
+    border-color: #4a89dc;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4a89dc;
+    color: white;
+}
+
+.btn-outline-danger {
+    background-color: transparent;
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .checkbox-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .song.card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Utility Classes */
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mt-2 { margin-top: 0.5rem; }
+.d-inline { display: inline; }

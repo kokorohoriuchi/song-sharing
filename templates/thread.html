@@ -25,11 +25,11 @@
 {% endfor %}
 
 {% if session.user_id %}
-<h3>New post</h3>
+<h3>Reply</h3>
 
 <form action="/new_message" method="post">
   <p>
-    <label for="content">Content</label>:<br />
+    <label for="content">Message</label>:<br />
     <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
   </p>
   <input type="hidden" name="thread_id" value="{{ thread.id }}" />

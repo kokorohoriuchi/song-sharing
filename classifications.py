@@ -1,52 +1,54 @@
 from db import execute, query
+from flask import current_app
 
 def initialize_classification_tables():
-    """Create the classification tables if they don't exist"""
-    execute("""
-        CREATE TABLE IF NOT EXISTS genres (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE
-        )
-    """)
+    """Initialize the classification tables"""
+    with current_app.app_context():
+        execute("""
+            CREATE TABLE IF NOT EXISTS genres (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE
+            )
+        """)
     
-    execute("""
-        CREATE TABLE IF NOT EXISTS styles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE
-        )
-    """)
+        execute("""
+            CREATE TABLE IF NOT EXISTS styles (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL UNIQUE
+            )
+        """)
     
-    execute("""
-        CREATE TABLE IF NOT EXISTS song_classifications (
-            song_id INTEGER NOT NULL,
-            genre_id INTEGER,
-            style_id INTEGER,
-            FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE,
-            FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE,
-            FOREIGN KEY (style_id) REFERENCES styles(id) ON DELETE CASCADE,
-            PRIMARY KEY (song_id, genre_id, style_id)
-        )
-    """)
+        execute("""
+            CREATE TABLE IF NOT EXISTS song_classifications (
+                song_id INTEGER NOT NULL,
+                genre_id INTEGER,
+                style_id INTEGER,
+                FOREIGN KEY (song_id) REFERENCES songs(id) ON DELETE CASCADE,
+                FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE CASCADE,
+                FOREIGN KEY (style_id) REFERENCES styles(id) ON DELETE CASCADE,
+                PRIMARY KEY (song_id, genre_id, style_id)
+            )
+        """)
     
-    default_genres = [
-        'pop', 'hiphop', 'rap', 'electronic', 'indie',
-        'country', 'jazz', 'R&B', 'rock'
-    ]
-    for genre in default_genres:
-        execute(
-            "INSERT OR IGNORE INTO genres (name) VALUES (?)",
-            [genre]
-        )
+        default_genres = [
+            'pop', 'hiphop', 'rap', 'electronic', 'indie',
+            'country', 'jazz', 'R&B', 'rock'
+        ]
+        for genre in default_genres:
+            execute(
+                "INSERT OR IGNORE INTO genres (name) VALUES (?)",
+                [genre]
+            )
     
-    default_styles = [
-        'industrial', 'blues', 'alternative', 'underground',
-        'lo-fi', 'instrumental'
-    ]
-    for style in default_styles:
-        execute(
-            "INSERT OR IGNORE INTO styles (name) VALUES (?)",
-            [style]
-        )
+        default_styles = [
+            'industrial', 'blues', 'alternative', 'underground',
+            'lo-fi', 'instrumental'
+        ]
+        for style in default_styles:
+            execute(
+                "INSERT OR IGNORE INTO styles (name) VALUES (?)",
+                [style]
+            )
 
 def get_all_genres():
     """Return all genre options"""

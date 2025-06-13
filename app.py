@@ -415,3 +415,9 @@ def delete_song(song_id):
     songs.delete_song(song_id)
     flash("Song deleted successfully")
     return redirect("/songs")
+
+@app.route("/songs/search")
+def search_songs():
+    query = request.args.get("q", "")
+    results = songs.search_songs(query) 
+    return render_template("songs/list.html", songs=results, search_query=query)

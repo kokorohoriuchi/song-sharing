@@ -82,3 +82,12 @@ def get_recent_songs(limit=5):
         """, [song["id"]])
     
     return songs
+
+def search_songs(query):
+    return query("""
+        SELECT s.id, s.title, s.artist, u.username 
+        FROM songs s
+        JOIN users u ON s.user_id = u.id
+        WHERE s.title LIKE ? OR s.artist LIKE ?
+        ORDER BY s.title
+    """, [f"%{query}%", f"%{query}%"])

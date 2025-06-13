@@ -9,6 +9,7 @@ from db import init_app
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+app.config['DATABASE'] = 'database.db'
 init_app(app)
 with app.app_context():
     classifications.initialize_classification_tables()

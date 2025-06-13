@@ -14,7 +14,7 @@ Share your favorite songs, and see what others are listening to.
 
 • The user page shows how many songs the user has shared and a list of songs the user has shared.
 
-• The user can select one or more classifications for the song (e.g. genre, style, length).
+• The user can select one or more classifications for the song (e.g. genre, style).
 
 • The user can give a comment and a rating to a shared song. The comments and average rating are displayed for the shared song. 
 

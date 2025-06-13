@@ -23,19 +23,19 @@
 {% endif %}
 
 <p>
-  User has sent {{ messages | count }} messages
+  User has {{ messages | count }} posts
 </p>
 
 {% if messages %}
 <p>
-  First message sent {{ messages[-1].sent_at }}
+  First post at {{ messages[-1].sent_at }}
 </p>
 <p>
-  Last message sent {{ messages[0].sent_at }}
+  Last post at {{ messages[0].sent_at }}
 </p>
 {% endif %}
 
-<h3>Messages</h3>
+<h3>Posts</h3>
 
 <ul>
 {% for message in messages %}

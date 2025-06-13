@@ -5,7 +5,7 @@ import markupsafe
 import config, forum, users
 import classifications
 import songs
-from db import init_db
+from db import init_db, execute, query
 import os
 import click
 from flask.cli import with_appcontext

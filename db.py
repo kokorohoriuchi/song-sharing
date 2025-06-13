@@ -5,8 +5,6 @@ import os
 def init_db(app):
     """Initialize database connection handling"""
     app.teardown_appcontext(close_connection)
-    
-    # Ensure instance folder exists
     os.makedirs(os.path.join(app.instance_path), exist_ok=True)
 
 def get_connection():
@@ -30,8 +28,14 @@ def execute(sql, params=[]):
     result = con.execute(sql, params)
     con.commit()
     g.last_insert_id = result.lastrowid
+    return result
 
 def query(sql, params=[]):
     """Execute SQL query"""
     con = get_connection()
     return con.execute(sql, params).fetchall()
+
+def last_insert_id():
+    """Get the last inserted row ID"""
+    return g.get('last_insert_id', None)
+    

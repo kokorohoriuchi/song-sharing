@@ -3,6 +3,8 @@ from flask import Flask
 from flask import abort, flash, make_response, redirect, render_template, request, session
 import markupsafe
 import config, forum, users
+import classifications
+import songs
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -214,3 +216,108 @@ def show_image(user_id):
     response = make_response(bytes(image))
     response.headers.set("Content-Type", "image/jpeg")
     return response
+
+@app.route("/songs")
+def list_songs():
+    """List all songs with their classifications"""
+    all_songs = songs.get_all_songs()
+    return render_template("songs/list.html", songs=all_songs)
+
+@app.route("/songs/add", methods=["GET", "POST"])
+def add_song():
+    require_login()
+    
+    if request.method == "GET":
+        genres = classification.get_all_genres()
+        styles = classification.get_all_styles()
+        return render_template("songs/add.html", genres=genres, styles=styles)
+    
+    if request.method == "POST":
+        check_csrf()
+        
+        title = request.form["title"]
+        artist = request.form["artist"]
+        genre_ids = request.form.getlist("genres")
+        style_ids = request.form.getlist("styles")
+        
+        if not title or not artist:
+            flash("Title and artist are required")
+            return redirect("/songs/add")
+        
+        try:
+            song_id = songs.add_song(
+                title=title,
+                artist=artist,
+                user_id=session["user_id"]
+            )
+            
+            classification.update_song_classifications(song_id, genre_ids, style_ids)
+            
+            flash("Song added successfully")
+            return redirect("/songs")
+        except Exception as e:
+            flash(f"Error adding song: {str(e)}")
+            return redirect("/songs/add")
+
+@app.route("/songs/<int:song_id>/edit", methods=["GET", "POST"])
+def edit_song(song_id):
+    require_login()
+    
+    song = songs.get_song(song_id)
+    if not song or song["user_id"] != session["user_id"]:
+        abort(403)
+    
+    if request.method == "GET":
+        genres = classification.get_all_genres()
+        styles = classification.get_all_styles()
+        current_genres = [g["id"] for g in classification.get_song_genres(song_id)]
+        current_styles = [s["id"] for s in classification.get_song_styles(song_id)]
+        
+        return render_template(
+            "songs/edit.html",
+            song=song,
+            genres=genres,
+            styles=styles,
+            current_genres=current_genres,
+            current_styles=current_styles
+        )
+    
+    if request.method == "POST":
+        check_csrf()
+        
+        title = request.form["title"]
+        artist = request.form["artist"]
+        genre_ids = request.form.getlist("genres")
+        style_ids = request.form.getlist("styles")
+        
+        if not title or not artist:
+            flash("Title and artist are required")
+            return redirect(f"/songs/{song_id}/edit")
+        
+        try:
+            songs.update_song(
+                song_id=song_id,
+                title=title,
+                artist=artist
+            )
+            
+            classification.update_song_classifications(song_id, genre_ids, style_ids)
+            
+            flash("Song updated successfully")
+            return redirect("/songs")
+        except Exception as e:
+            flash(f"Error updating song: {str(e)}")
+            return redirect(f"/songs/{song_id}/edit")
+
+@app.route("/songs/<int:song_id>/delete", methods=["POST"])
+def delete_song(song_id):
+    require_login()
+    check_csrf()
+    
+    song = songs.get_song(song_id)
+    if not song or song["user_id"] != session["user_id"]:
+        abort(403)
+    
+    songs.delete_song(song_id)
+    flash("Song deleted successfully")
+    return redirect("/songs")

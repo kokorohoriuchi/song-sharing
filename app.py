@@ -6,18 +6,13 @@ import config, forum, users
 import classifications
 import songs
 from db import init_app
-import click
-from flask.cli import with_appcontext
+import os
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
-app.config['DATABASE'] = 'database.db'
-init_app(app)
-@app.cli.command("init-db")
-@with_appcontext
-def init_db_command():
-    classifications.initialize_classification_tables()
-    click.echo("Initialized the database.")
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['DATABASE'] = os.path.join(basedir, 'instance', 'database.db')
+init_db(app)
 
 @app.template_filter()
 def show_lines(content):

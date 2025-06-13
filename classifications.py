@@ -1,6 +1,6 @@
 from db import execute, query
 
-def initialize_tables():
+def initialize_classification_tables():
     """Create the classification tables if they don't exist"""
     execute("""
         CREATE TABLE IF NOT EXISTS genres (

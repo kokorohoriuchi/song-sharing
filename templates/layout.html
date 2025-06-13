@@ -26,10 +26,11 @@
           <li class="nav-item">
             <a class="nav-link" href="/songs/add">Add Song</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/search">Search</a>
-          </li>
         </ul>
+          <form class="d-flex" action="/songs/search" method="GET">
+                <input class="form-control me-2" type="search" name="q" placeholder="Search songs..." aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
         <ul class="navbar-nav">
           {% if session.user_id %}
           <li class="nav-item">

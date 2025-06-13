@@ -6,11 +6,11 @@ import config, forum, users
 import classifications
 import songs
 from db import init_app
-init_app(app)
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
 classifications.initialize_classification_tables()
+init_app(app)
 
 @app.template_filter()
 def show_lines(content):

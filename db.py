@@ -1,8 +1,10 @@
 from flask import g, current_app
 import sqlite3
+import os
 
 def get_connection():
     if 'db' not in g:
+        os.makedirs(os.path.dirname(current_app.config['DATABASE']), exist_ok=True)
         g.db = sqlite3.connect(current_app.config['DATABASE'])
         g.db.execute("PRAGMA foreign_keys = ON")
         g.db.row_factory = sqlite3.Row

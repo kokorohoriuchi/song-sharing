@@ -127,7 +127,16 @@ def index(page=1):
             return redirect("/" + str(page_count))
 
         threads = forum.get_threads(page, page_size)
-        return render_template("index.html", page=page, page_count=page_count, threads=threads)
+        recent_songs = songs.get_recent_songs(limit=3)
+        
+        return render_template(
+        "index.html",
+        page=page,
+        page_count=page_count,
+        threads=threads,
+        recent_songs=recent_songs
+    )
+        
     except sqlite3.OperationalError as e:
         flash("Database error. Please contact admin.")
         return render_template("error.html", error=str(e)), 500

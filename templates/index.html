@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 
-{% block title %}Discussion{% endblock %}
+{% block title %}Song Share{% endblock %}
 
 {% block content %}
 
-<h2>Front Page</h2>
+<h2>Home</h2>
 
 {% for message in get_flashed_messages() %}
 <p class="info">
@@ -30,7 +30,7 @@
 </p>
 
 {% if session.user_id %}
-<h3>New chain</h3>
+<h3>New post</h3>
 
 <form action="/new_thread" method="post">
   <p>
@@ -38,7 +38,7 @@
     <input type="text" id="title" name="title" maxlength="100" required />
   </p>
   <p>
-    <label for="content">Message</label>:<br />
+    <label for="content">Content</label>:<br />
     <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
   </p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

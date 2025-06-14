@@ -16,7 +16,12 @@ Share your favorite songs, and see what others are listening to.
 
 • The user can select one or more classifications for the song (e.g. genre, style).
 
-• The user can give a comment and a rating to a shared song. The comments and average rating are displayed for the shared song. 
+• The user can give a rating to a shared song.
 
-Current state of the application (on June 15th):
-
+Current state of the application (on June 14th):
+- The user can create an account and log in to the application.
+- The user can add, edit, and delete posts and songs.
+- The user sees the posts and songs added to the application.
+- The user can search for songs by keyword.
+- The user can select one or more classifications for a data item. 
+- The user can send comments to another user's post, which will be displayed in the application.

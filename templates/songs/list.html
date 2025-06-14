@@ -3,46 +3,56 @@
 {% block title %}Songs{% endblock %}
 
 {% block content %}
-<h1>Songs</h1>
-
-{% if session.user_id %}
-<p><a href="/songs/add" class="btn btn-primary">Add Song</a></p>
-{% endif %}
-
-<div class="song-list">
-    {% for song in songs %}
-    <div class="song card mb-3">
-        <div class="card-body">
-            <h5 class="card-title">{{ song.title }}</h5>
-            <h6 class="card-subtitle mb-2 text-muted">
-                by {{ song.artist }} • added by {{ song.username }}
-            </h6>
-            
-            <div class="mb-2">
-                <strong>Genres:</strong>
-                {% for genre in song.genres %}
-                <span class="badge bg-primary">{{ genre.name }}</span>
-                {% endfor %}
-            </div>
-            
-            <div class="mb-2">
-                <strong>Styles:</strong>
-                {% for style in song.styles %}
-                <span class="badge bg-secondary">{{ style.name }}</span>
-                {% endfor %}
-            </div>
-            
-            {% if song.user_id == session.user_id %}
-            <div class="mt-2">
-                <a href="/songs/{{ song.id }}/edit" class="btn btn-sm btn-outline-primary">Edit</a>
-                <form action="/songs/{{ song.id }}/delete" method="POST" class="d-inline">
-                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                </form>
-            </div>
-            {% endif %}
-        </div>
+<div class="container">
+    {% if search_query %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Search Results for "{{ search_query }}"</h2>
+        <a href="{{ url_for('list_songs') }}" class="btn btn-secondary">Clear Search</a>
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>All Songs</h1>
+        {% if session.user_id %}
+        <a href="/songs/add" class="btn btn-primary">Add Song</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="song-list">
+        {% for song in songs %}
+        <div class="song card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ song.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    by {{ song.artist }} • added by {{ song.username }}
+                </h6>
+                
+                <div class="mb-2">
+                    <strong>Genres:</strong>
+                    {% for genre in song.genres %}
+                    <span class="badge bg-primary">{{ genre.name }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="mb-2">
+                    <strong>Styles:</strong>
+                    {% for style in song.styles %}
+                    <span class="badge bg-secondary">{{ style.name }}</span>
+                    {% endfor %}
+                </div>
+                
+                {% if song.user_id == session.user_id %}
+                <div class="mt-2">
+                    <a href="/songs/{{ song.id }}/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <form action="/songs/{{ song.id }}/delete" method="POST" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

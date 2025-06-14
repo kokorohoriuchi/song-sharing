@@ -57,7 +57,7 @@ def delete_song(song_id):
     execute("DELETE FROM songs WHERE id = ?", [song_id])
 
 def get_recent_songs(limit=5):
-    """Get recent songs"""
+    """Get recent songs with their classifications"""
     songs = query("""
         SELECT s.id, s.title, s.artist, s.user_id, u.username
         FROM songs s
@@ -66,22 +66,26 @@ def get_recent_songs(limit=5):
         LIMIT ?
     """, [limit])
     
+    songs_list = []
     for song in songs:
-        song["genres"] = query("""
+        song_dict = dict(song)
+        song_dict["genres"] = query("""
             SELECT g.id, g.name 
             FROM genres g
             JOIN song_classifications sc ON g.id = sc.genre_id
             WHERE sc.song_id = ?
-        """, [song["id"]])
+        """, [song_dict["id"]])
         
-        song["styles"] = query("""
+        song_dict["styles"] = query("""
             SELECT s.id, s.name 
             FROM styles s
             JOIN song_classifications sc ON s.id = sc.style_id
             WHERE sc.song_id = ?
-        """, [song["id"]])
+        """, [song_dict["id"]])
+        
+        songs_list.append(song_dict)
     
-    return songs
+    return songs_list
 
 def search_songs(query):
     return query("""

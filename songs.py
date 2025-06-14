@@ -16,7 +16,7 @@ def get_all_songs():
         FROM songs s
         JOIN users u ON s.user_id = u.id
         ORDER BY s.title
-    """)
+    """, as_dict=True)
     
     for song in songs:
         song["genres"] = query("""
@@ -24,14 +24,14 @@ def get_all_songs():
             FROM genres g
             JOIN song_classifications sc ON g.id = sc.genre_id
             WHERE sc.song_id = ?
-        """, [song["id"]])
+        """, [song["id"]], as_dict=True)
         
         song["styles"] = query("""
             SELECT s.id, s.name 
             FROM styles s
             JOIN song_classifications sc ON s.id = sc.style_id
             WHERE sc.song_id = ?
-        """, [song["id"]])
+        """, [song["id"]], as_dict=True)
     
     return songs
 

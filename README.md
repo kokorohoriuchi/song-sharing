@@ -1,4 +1,4 @@
-# song-sharing
+# song share
 Share your favorite songs, and see what others are listening to.
 
 

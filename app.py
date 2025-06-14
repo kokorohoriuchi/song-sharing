@@ -418,6 +418,17 @@ def delete_song(song_id):
 
 @app.route("/songs/search")
 def search_songs():
-    query = request.args.get("q", "")
-    results = songs.search_songs(query) 
-    return render_template("songs/list.html", songs=results, search_query=query)
+    try:
+        search_term = request.args.get("q", "").strip()
+        if not search_term:
+            return redirect(url_for('list_songs'))
+            
+        results = songs.search_songs(search_term)
+        return render_template("songs/list.html", 
+                            songs=results, 
+                            search_query=search_term)
+    except Exception as e:
+        app.logger.error(f"Search error: {str(e)}")
+        flash("An error occurred during search")
+        return redirect(url_for('list_songs'))
+        

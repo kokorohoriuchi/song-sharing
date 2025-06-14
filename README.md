@@ -18,11 +18,11 @@ Share your favorite songs, and see what others are listening to.
 
 • The user can give a rating to a shared song.
 
-
-Current state of the application (on June 14th):
-- The user can create an account and log in to the application.
-- The user can add, edit, and delete posts and songs.
-- The user sees the posts and songs added to the application.
-- The user can search for songs by keyword.
-- The user can select one or more classifications for a data item. 
-- The user can send comments to another user's post, which will be displayed in the application.
+<br />
+Current state of the application (on June 14th): <br />
+- The user can create an account and log in to the application.<br />
+- The user can add, edit, and delete posts and songs.<br />
+- The user sees the posts and songs added to the application.<br />
+- The user can search for songs by keyword.<br />
+- The user can select one or more classifications for a data item. <br />
+- The user can send comments to another user's post, which will be displayed in the application.<br />

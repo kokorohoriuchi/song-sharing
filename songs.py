@@ -87,11 +87,17 @@ def get_recent_songs(limit=5):
     
     return songs_list
 
-def search_songs(query):
+ def search_songs(query_term):
+    """Search songs by title or artist"""
+    if not query_term:
+        return []
+    
+    search_pattern = f"%{query_term}%"
     return query("""
-        SELECT s.id, s.title, s.artist, u.username 
+        SELECT s.id, s.title, s.artist, s.user_id, u.username
         FROM songs s
         JOIN users u ON s.user_id = u.id
         WHERE s.title LIKE ? OR s.artist LIKE ?
         ORDER BY s.title
-    """, [f"%{query}%", f"%{query}%"])
+    """, [search_pattern, search_pattern], as_dict=True)
+     

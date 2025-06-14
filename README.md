@@ -18,6 +18,7 @@ Share your favorite songs, and see what others are listening to.
 
 • The user can give a rating to a shared song.
 
+
 Current state of the application (on June 14th):
 - The user can create an account and log in to the application.
 - The user can add, edit, and delete posts and songs.

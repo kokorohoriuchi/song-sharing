@@ -321,7 +321,7 @@ def show_image(user_id):
 
 @app.route("/songs")
 def list_songs():
-    all_songs = songs.get_all_songs()  # Make sure this function exists in songs.py
+    all_songs = songs.get_all_songs()  
     return render_template("songs/list.html", songs=all_songs)
 
 @app.route("/songs/add", methods=["GET", "POST"])

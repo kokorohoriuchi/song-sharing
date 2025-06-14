@@ -87,7 +87,7 @@ def get_recent_songs(limit=5):
     
     return songs_list
 
- def search_songs(query_term):
+def search_songs(query_term):
     """Search songs by title or artist"""
     if not query_term:
         return []
@@ -100,4 +100,4 @@ def get_recent_songs(limit=5):
         WHERE s.title LIKE ? OR s.artist LIKE ?
         ORDER BY s.title
     """, [search_pattern, search_pattern], as_dict=True)
-     
+    

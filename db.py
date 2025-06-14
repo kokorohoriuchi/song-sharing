@@ -30,10 +30,16 @@ def execute(sql, params=[]):
     g.last_insert_id = result.lastrowid
     return result
 
-def query(sql, params=[]):
-    """Execute SQL query"""
+def query(sql, params=(), as_dict=False):
+    """Execute SQL query and return results"""
     con = get_connection()
-    return con.execute(sql, params).fetchall()
+    cur = con.execute(sql, params)
+    
+    if as_dict:
+        columns = [col[0] for col in cur.description]
+        return [dict(zip(columns, row)) for row in cur.fetchall()]
+    else:
+        return cur.fetchall()
 
 def last_insert_id():
     """Get the last inserted row ID"""

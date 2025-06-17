@@ -1,5 +1,5 @@
-from db import execute, query
 from flask import current_app
+from db import execute, query
 
 def initialize_classification_tables():
     """Initialize the classification tables"""

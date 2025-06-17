@@ -1,6 +1,6 @@
-from flask import g, current_app
 import sqlite3
 import os
+from flask import g, current_app
 
 def init_db(app):
     """Initialize database connection handling"""
@@ -16,7 +16,7 @@ def get_connection():
         g.db.row_factory = sqlite3.Row
     return g.db
 
-def close_connection(e=None):
+def close_connection():
     """Close database connection"""
     db = g.pop('db', None)
     if db is not None:
@@ -38,8 +38,7 @@ def query(sql, params=(), as_dict=False):
     if as_dict:
         columns = [col[0] for col in cur.description]
         return [dict(zip(columns, row)) for row in cur.fetchall()]
-    else:
-        return cur.fetchall()
+    return cur.fetchall()
 
 def last_insert_id():
     """Get the last inserted row ID"""

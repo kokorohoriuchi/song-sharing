@@ -1,4 +1,7 @@
 import math, secrets, sqlite3
+import os
+import click
+from flask.cli import with_appcontext
 from flask import Flask
 from flask import abort, flash, make_response, redirect, render_template, request, session
 import markupsafe
@@ -6,9 +9,6 @@ import config, forum, users
 import classifications
 import songs
 from db import init_db, execute, query
-import os
-import click
-from flask.cli import with_appcontext
 
 app = Flask(__name__)
 app.secret_key = config.secret_key

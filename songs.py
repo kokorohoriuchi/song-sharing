@@ -1,5 +1,4 @@
 from db import execute, query, last_insert_id
-from flask import current_app
 
 def add_song(title, artist, user_id):
     """Add a new song"""

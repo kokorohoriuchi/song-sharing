@@ -39,7 +39,7 @@ def add_thread(title, content, user_id):
 def add_message(content, user_id, thread_id):
     execute("""
         INSERT INTO messages (content, sent_at, user_id, thread_id)
-        VALUES (?, datetime('now'), ?, ?)
+        VALUES (?, datetime("now"), ?, ?)
     """, [content, user_id, thread_id])
 
 def update_message(message_id, content):

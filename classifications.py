@@ -31,8 +31,8 @@ def initialize_classification_tables():
         """)
     
         default_genres = [
-            'pop', 'hiphop', 'rap', 'electronic', 'indie',
-            'country', 'jazz', 'R&B', 'rock'
+            "pop", "hiphop", "rap", "electronic", "indie",
+            "country", "jazz", "R&B", "rock"
         ]
         for genre in default_genres:
             execute(
@@ -41,8 +41,8 @@ def initialize_classification_tables():
             )
     
         default_styles = [
-            'industrial', 'blues', 'alternative', 'underground',
-            'lo-fi', 'instrumental'
+            "industrial", "blues", "alternative", "underground",
+            "lo-fi", "instrumental"
         ]
         for style in default_styles:
             execute(

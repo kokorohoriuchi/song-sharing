@@ -32,9 +32,15 @@ Current state of the application (on June 14th): <br />
 <br />
 To run the application, first:
 
-`flask init-db`
+`python3 -m venv venv`<br />
+`source venv/bin/activate`<br />
+`pip install flask`<br />
 
 then:
+
+`flask init-db`
+
+finally:
 
 `flask run`
 

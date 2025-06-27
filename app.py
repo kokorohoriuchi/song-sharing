@@ -13,7 +13,7 @@ from db import init_db, execute, query
 app = Flask(__name__)
 app.secret_key = config.secret_key
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['DATABASE'] = os.path.join(basedir, 'instance', 'database.db')
+app.config["DATABASE"] = os.path.join(basedir, "instance", "database.db")
 init_db(app)
 
 @app.cli.command("init-db")
@@ -88,11 +88,11 @@ def init_db_command():
         )
     """)
     
-    default_genres = ['pop', 'hiphop', 'rap', 'electronic', 'indie', 'country', 'jazz', 'R&B', 'rock']
+    default_genres = ["pop", "hiphop", "rap", "electronic", "indie", "country", "jazz", "R&B", "rock"]
     for genre in default_genres:
         execute("INSERT OR IGNORE INTO genres (name) VALUES (?)", [genre])
     
-    default_styles = ['industrial', 'blues', 'alternative', 'underground', 'lo-fi', 'instrumental']
+    default_styles = ["industrial", "blues", "alternative", "underground", "lo-fi", "instrumental"]
     for style in default_styles:
         execute("INSERT OR IGNORE INTO styles (name) VALUES (?)", [style])
     
@@ -421,7 +421,7 @@ def search_songs():
     try:
         search_term = request.args.get("q", "").strip()
         if not search_term:
-            return redirect(url_for('list_songs'))
+            return redirect(url_for("list_songs"))
             
         results = songs.search_songs(search_term)
         return render_template("songs/list.html", 
@@ -430,5 +430,5 @@ def search_songs():
     except Exception as e:
         app.logger.error(f"Search error: {str(e)}")
         flash("An error occurred during search")
-        return redirect(url_for('list_songs'))
+        return redirect(url_for("list_songs"))
         

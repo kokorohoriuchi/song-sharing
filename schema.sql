@@ -42,9 +42,9 @@ CREATE TABLE IF NOT EXISTS song_classifications (
 );
 
 INSERT OR IGNORE INTO genres (name) VALUES 
-('pop'), ('hiphop'), ('rap'), ('electronic'), ('indie'), 
-('country'), ('jazz'), ('R&B'), ('rock');
+("pop"), ("hiphop"), ("rap"), ("electronic"), ("indie"), 
+("country"), ("jazz"), ("R&B"), ("rock");
 
 INSERT OR IGNORE INTO styles (name) VALUES 
-('industrial'), ('blues'), ('alternative'), ('underground'), 
-('lo-fi'), ('instrumental');
+("industrial"), ("blues"), ("alternative"), ("underground"), 
+("lo-fi"), ("instrumental");

@@ -10,7 +10,7 @@ def init_db(app):
 def get_connection():
     """Get or create database connection"""
     if 'db' not in g:
-        db_path = current_app.config['DATABASE']
+        db_path = current_app.config["DATABASE"]
         g.db = sqlite3.connect(db_path)
         g.db.execute("PRAGMA foreign_keys = ON")
         g.db.row_factory = sqlite3.Row
@@ -18,7 +18,7 @@ def get_connection():
 
 def close_connection():
     """Close database connection"""
-    db = g.pop('db', None)
+    db = g.pop("db", None)
     if db is not None:
         db.close()
 
@@ -42,5 +42,5 @@ def query(sql, params=(), as_dict=False):
 
 def last_insert_id():
     """Get the last inserted row ID"""
-    return g.get('last_insert_id', None)
+    return g.get("last_insert_id", None)
     

@@ -27,11 +27,17 @@ Current state of the application (on June 14th): <br />
 - The application has pages that display user-added data items.<br />
 - The user can select one or more classifications for a data item. <br />
 - The user can send comments to another user's post, which will be displayed in the application.<br />
+- (IN PROGRESS) The user page shows statistics and user-added data items. <br />
 
 <br />
-To run the application, first
-flask init-db
-then
-flask run
-If there is an error, try
-sqlite3 database.db < schema.sql
+To run the application, first:
+
+`flask init-db`
+
+then:
+
+`flask run`
+
+If there is an error, try first:
+
+`sqlite3 database.db < schema.sql`

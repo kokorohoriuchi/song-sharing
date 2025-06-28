@@ -1,7 +1,6 @@
-/* Base Styles */
 :root {
-    --primary-color: #1DB954; /* Spotify green */
-    --dark-color: #191414;    /* Spotify black */
+    --primary-color: #1DB954; 
+    --dark-color: #191414;   
     --light-color: #ffffff;
     --text-color: #333333;
     --border-color: #e1e1e1;
@@ -27,7 +26,6 @@ body {
     padding: 0 1rem;
 }
 
-/* Header Styles */
 .header {
     background-color: var(--dark-color);
     color: var(--light-color);
@@ -60,7 +58,6 @@ body {
     cursor: pointer;
 }
 
-/* Navigation */
 .nav {
     transition: all 0.3s ease;
 }
@@ -108,12 +105,10 @@ body {
     cursor: pointer;
 }
 
-/* Main Content */
 .main-content {
     padding: 2rem 0;
 }
 
-/* Flashed Messages */
 .flashes {
     margin-bottom: 1rem;
 }
@@ -134,7 +129,6 @@ body {
     color: #721c24;
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .mobile-menu-toggle {
         display: block;

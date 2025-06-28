@@ -149,10 +149,36 @@ def search():
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
-    user = users.get_user(user_id)
+    user = query("""
+        SELECT id, username, 
+               image IS NOT NULL as has_image,
+               created_at
+        FROM users 
+        WHERE id = ?
+    """, (user_id,), as_dict=True)
+    
     if not user:
         abort(404)
-    messages = users.get_messages(user_id)
+    user = user[0]
+    stats = get_user_stats(user_id)
+    recent_songs = get_user_songs(user_id)
+
+    messages = query("""
+        SELECT m.id, m.content, m.sent_at, 
+               t.id as thread_id, t.title as thread_title
+        FROM messages m
+        JOIN threads t ON m.thread_id = t.id
+        WHERE m.user_id = ?
+        ORDER BY m.sent_at DESC
+    """, (user_id,), as_dict=True)
+    
+    return render_template(
+        "user.html",
+        user=user,
+        stats=stats,
+        recent_songs=recent_songs,
+        messages=messages
+    )
     return render_template("user.html", user=user, messages=messages)
 
 @app.route("/thread/<int:thread_id>")

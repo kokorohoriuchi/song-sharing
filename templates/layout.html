@@ -16,7 +16,9 @@
                 <ul class="nav-list">
                     <li><a href="/">Home</a></li>
                     <li><a href="/songs">Songs</a></li>
+                    {% if 'user_id' in session %}
                     <li><a href="/songs/add">Add Song</a></li>
+                    {% endif %}
                     
                     <li class="search-container">
                         <form action="{{ url_for('search_songs') }}" method="GET" class="search-form">

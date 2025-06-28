@@ -322,12 +322,11 @@ def register():
 
         try:
             users.create_user(username, password1)
-            flash("Your account was created successfully, you can now log in.")
-            return redirect("/")
+            flash("Registration successful! Please log in.")
+            return redirect(url_for('login')) 
         except sqlite3.IntegrityError:
-            flash("ERROR: The ID you selected is already taken.")
-            filled = {"username": username}
-            return render_template("register.html", filled=filled)
+            flash("ERROR: The username you selected is already taken.")
+            return render_template("register.html", filled={"username": username})
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -396,6 +395,7 @@ def list_songs():
     return render_template("songs/list.html", songs=all_songs)
 
 @app.route("/songs/add", methods=["GET", "POST"])
+@require_login
 def add_song():
     if request.method == "GET":
         genres = classifications.get_all_genres()
@@ -430,7 +430,12 @@ def add_song():
             return redirect("/songs/add")
 
 @app.route("/songs/<int:song_id>/edit", methods=["GET", "POST"])
+@require_login
 def edit_song(song_id):
+    song = songs.get_song(song_id)
+    if not song or song['user_id'] != session['user_id']:
+        abort(403)
+        
     if request.method == "GET":
         song = songs.get_song(song_id)
         genres = classifications.get_all_genres()

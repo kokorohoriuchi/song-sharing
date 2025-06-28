@@ -30,6 +30,10 @@ def require_login(f=None):
         return decorator
     return decorator(f)
 
+def check_login():
+    if "user_id" not in session:
+        abort(403)
+
 def get_user_stats(user_id):
     """Get statistics for a specific user"""
     stats = query("""
@@ -251,7 +255,7 @@ def show_thread(thread_id):
 @app.route("/new_thread", methods=["POST"])
 def new_thread():
     check_csrf()
-    require_login()
+    check_login()
 
     title = request.form["title"]
     content = request.form["content"]
@@ -265,7 +269,7 @@ def new_thread():
 @app.route("/new_message", methods=["POST"])
 def new_message():
     check_csrf()
-    require_login()
+    check_login()
 
     content = request.form["content"]
     if len(content) > 5000:
@@ -282,7 +286,7 @@ def new_message():
 
 @app.route("/edit/<int:message_id>", methods=["GET", "POST"])
 def edit_message(message_id):
-    require_login()
+    check_login()
 
     message = forum.get_message(message_id)
     if not message or message["user_id"] != session["user_id"]:
@@ -301,7 +305,7 @@ def edit_message(message_id):
 
 @app.route("/remove/<int:message_id>", methods=["GET", "POST"])
 def remove_message(message_id):
-    require_login()
+    check_login()
 
     message = forum.get_message(message_id)
     if not message or message["user_id"] != session["user_id"]:
@@ -363,14 +367,14 @@ def login():
 
 @app.route("/logout")
 def logout():
-    require_login()
+    check_login()
 
     del session["user_id"]
     return redirect("/")
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
-    require_login()
+    check_login()
 
     if request.method == "GET":
         return render_template("add_image.html")
@@ -409,7 +413,7 @@ def list_songs():
     return render_template("songs/list.html", songs=all_songs)
 
 @app.route("/songs/add", methods=["GET", "POST"])
-@require_login
+@require_login()
 def add_song():
     if request.method == "GET":
         genres = classifications.get_all_genres()
@@ -444,7 +448,7 @@ def add_song():
             return redirect("/songs/add")
 
 @app.route("/songs/<int:song_id>/edit", methods=["GET", "POST"])
-@require_login
+@require_login()
 def edit_song(song_id):
     song = songs.get_song(song_id)
     if not song or song['user_id'] != session['user_id']:
@@ -495,7 +499,7 @@ def edit_song(song_id):
 
 @app.route("/songs/<int:song_id>/delete", methods=["POST"])
 def delete_song(song_id):
-    require_login()
+    check_login()
     check_csrf()
     
     song = songs.get_song(song_id)

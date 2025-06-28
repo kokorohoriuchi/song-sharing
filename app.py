@@ -152,20 +152,29 @@ def search():
 
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
-    user = query("""
-        SELECT id, username, 
-               image IS NOT NULL as has_image,
-               created_at
-        FROM users 
-        WHERE id = ?
-    """, (user_id,), as_dict=True)
+    try:
+        user = query("""
+            SELECT id, username, 
+                   image IS NOT NULL as has_image,
+                   created_at
+            FROM users 
+            WHERE id = ?
+        """, (user_id,), as_dict=True)
+    except sqlite3.OperationalError:
+        user = query("""
+            SELECT id, username, 
+                   image IS NOT NULL as has_image
+            FROM users 
+            WHERE id = ?
+        """, (user_id,), as_dict=True)
+        if user:
+            user[0]['created_at'] = "Unknown"
     
     if not user:
         abort(404)
     user = user[0]
     stats = get_user_stats(user_id)
     recent_songs = get_user_songs(user_id)
-
     messages = query("""
         SELECT m.id, m.content, m.sent_at, 
                t.id as thread_id, t.title as thread_title
@@ -182,7 +191,6 @@ def show_user(user_id):
         recent_songs=recent_songs,
         messages=messages
     )
-    return render_template("user.html", user=user, messages=messages)
 
 @app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):

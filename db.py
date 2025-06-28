@@ -49,18 +49,25 @@ def get_user_stats(user_id):
     return query("""
         SELECT 
             COUNT(songs.id) as song_count,
-            SUM(songs.duration) as total_duration,
-            COUNT(DISTINCT songs.genre) as unique_genres
+            COUNT(DISTINCT songs.artist) as unique_artists,
+            COUNT(DISTINCT song_classifications.genre_id) as unique_genres
         FROM songs
+        LEFT JOIN song_classifications ON songs.id = song_classifications.song_id
         WHERE songs.user_id = ?
     """, (user_id,), as_dict=True)[0]
 
 def get_user_songs(user_id, limit=5):
     """Get recent songs added by user"""
     return query("""
-        SELECT * FROM songs
-        WHERE user_id = ?
-        ORDER BY created_at DESC
+        SELECT songs.*, 
+               GROUP_CONCAT(DISTINCT genres.name) as genres,
+               GROUP_CONCAT(DISTINCT styles.name) as styles
+        FROM songs
+        LEFT JOIN song_classifications ON songs.id = song_classifications.song_id
+        LEFT JOIN genres ON song_classifications.genre_id = genres.id
+        LEFT JOIN styles ON song_classifications.style_id = styles.id
+        WHERE songs.user_id = ?
+        GROUP BY songs.id
+        ORDER BY songs.id DESC
         LIMIT ?
     """, (user_id, limit), as_dict=True)
-    

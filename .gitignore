@@ -2,4 +2,4 @@ __pycache__
 venv
 FLASK_APP=app.py
 FLASK_ENV=development
-config.py
+secret_key = "c5a2a1310444f40c6273d61b73d5777c1e3ea123cf6e0d525f1bc1270d5cb603"

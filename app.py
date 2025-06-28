@@ -191,7 +191,7 @@ def show_user(user_id):
         user = query("""
             SELECT id, username, 
                    image IS NOT NULL as has_image,
-                   created_at
+                   datetime(created_at) as created_at
             FROM users 
             WHERE id = ?
         """, (user_id,), as_dict=True)
@@ -202,12 +202,11 @@ def show_user(user_id):
             FROM users 
             WHERE id = ?
         """, (user_id,), as_dict=True)
-        if user:
-            user[0]["created_at"] = "Unknown"
     
     if not user:
         abort(404)
     user = user[0]
+    user['created_at'] = user.get('created_at')
     stats = get_user_stats(user_id)
     recent_songs = get_user_songs(user_id)
     messages = query("""
@@ -226,7 +225,7 @@ def show_user(user_id):
         recent_songs=recent_songs,
         messages=messages
     )
-
+    
 @app.route("/thread/<int:thread_id>")
 def show_thread(thread_id):
     thread = forum.get_thread(thread_id)

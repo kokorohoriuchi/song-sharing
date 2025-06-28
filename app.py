@@ -200,11 +200,12 @@ def show_user(user_id):
         user = query("""
             SELECT id, username, 
                    image IS NOT NULL as has_image,
-                   datetime(created_at) as created_at
+                   datetime(created_at, 'localtime') as created_at
             FROM users 
             WHERE id = ?
         """, (user_id,), as_dict=True)
-    except sqlite3.OperationalError:
+    except sqlite3.OperationalError as e:
+        print(f"Database error: {e}")  # For debugging
         user = query("""
             SELECT id, username, 
                    image IS NOT NULL as has_image
@@ -215,7 +216,9 @@ def show_user(user_id):
     if not user:
         abort(404)
     user = user[0]
-    user['created_at'] = user.get('created_at')
+    if 'created_at' not in user:
+        user['created_at'] = None
+    
     stats = get_user_stats(user_id)
     recent_songs = get_user_songs(user_id)
     messages = query("""

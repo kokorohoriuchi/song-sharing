@@ -20,13 +20,13 @@ init_db(app)
 @with_appcontext
 def init_db_command():
     """Initialize the database"""
-    # Create all tables
     execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
             password_hash TEXT NOT NULL,
-            image BLOB
+            image BLOB,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
     

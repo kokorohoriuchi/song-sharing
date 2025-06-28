@@ -16,7 +16,7 @@ def get_connection():
         g.db.row_factory = sqlite3.Row
     return g.db
 
-def close_connection():
+def close_connection(exception=None):
     """Close database connection"""
     db = g.pop("db", None)
     if db is not None:

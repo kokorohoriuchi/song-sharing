@@ -4,6 +4,7 @@ import click
 from flask.cli import with_appcontext
 from flask import Flask
 from flask import abort, flash, make_response, redirect, render_template, request, session
+from functools import wraps
 import markupsafe
 import config, forum, users
 import classifications
@@ -15,6 +16,24 @@ app.secret_key = config.secret_key
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["DATABASE"] = os.path.join(basedir, "instance", "database.db")
 init_db(app)
+
+def require_login(f=None):
+    if f is None:
+        def decorator(func):
+            @wraps(func)
+            def wrapped_function(*args, **kwargs):
+                if "user_id" not in session:
+                    abort(403)
+                return func(*args, **kwargs)
+            return wrapped_function
+        return decorator
+    
+    @wraps(f)
+    def wrapped_function(*args, **kwargs):
+        if "user_id" not in session:
+            abort(403)
+        return f(*args, **kwargs)
+    return wrapped_function
 
 def get_user_stats(user_id):
     """Get statistics for a specific user"""

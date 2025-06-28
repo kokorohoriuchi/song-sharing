@@ -3,7 +3,7 @@ import os
 import click
 from flask.cli import with_appcontext
 from flask import Flask
-from flask import abort, flash, make_response, redirect, render_template, request, session
+from flask import abort, flash, make_response, redirect, render_template, request, session, g
 from functools import wraps
 import markupsafe
 import config, forum, users
@@ -17,20 +17,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["DATABASE"] = os.path.join(basedir, "instance", "database.db")
 init_db(app)
 
-def require_login(f=None):
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if "user_id" not in session:
-                abort(403)
-            return f(*args, **kwargs)
-        return decorated_function
-    
-    if f is None:
-        return decorator
-    return decorator(f)
+def require_login(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "user_id" not in session:
+            abort(403)
+        return f(*args, **kwargs)
+    return decorated_function
 
 def check_login():
+    """For inline login checks"""
     if "user_id" not in session:
         abort(403)
 
@@ -413,7 +409,7 @@ def list_songs():
     return render_template("songs/list.html", songs=all_songs)
 
 @app.route("/songs/add", methods=["GET", "POST"])
-@require_login()
+@require_login
 def add_song():
     if request.method == "GET":
         genres = classifications.get_all_genres()
@@ -448,7 +444,7 @@ def add_song():
             return redirect("/songs/add")
 
 @app.route("/songs/<int:song_id>/edit", methods=["GET", "POST"])
-@require_login()
+@require_login
 def edit_song(song_id):
     song = songs.get_song(song_id)
     if not song or song['user_id'] != session['user_id']:

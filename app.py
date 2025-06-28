@@ -16,6 +16,41 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["DATABASE"] = os.path.join(basedir, "instance", "database.db")
 init_db(app)
 
+def get_user_stats(user_id):
+    """Get statistics for a specific user"""
+    stats = query("""
+        SELECT 
+            COUNT(songs.id) as song_count,
+            COUNT(DISTINCT songs.artist) as unique_artists,
+            COUNT(DISTINCT sc.genre_id) as unique_genres,
+            COUNT(DISTINCT sc.style_id) as unique_styles
+        FROM songs
+        LEFT JOIN song_classifications sc ON songs.id = sc.song_id
+        WHERE songs.user_id = ?
+    """, (user_id,), as_dict=True)
+    return stats[0] if stats else {
+        "song_count": 0,
+        "unique_artists": 0,
+        "unique_genres": 0,
+        "unique_styles": 0
+    }
+
+def get_user_songs(user_id, limit=5):
+    """Get recent songs added by user"""
+    return query("""
+        SELECT songs.*, 
+               GROUP_CONCAT(DISTINCT g.name) as genres,
+               GROUP_CONCAT(DISTINCT s.name) as styles
+        FROM songs
+        LEFT JOIN song_classifications sc ON songs.id = sc.song_id
+        LEFT JOIN genres g ON sc.genre_id = g.id
+        LEFT JOIN styles s ON sc.style_id = s.id
+        WHERE songs.user_id = ?
+        GROUP BY songs.id
+        ORDER BY songs.id DESC
+        LIMIT ?
+    """, (user_id, limit), as_dict=True)
+
 @app.cli.command("init-db")
 @with_appcontext
 def init_db_command():
@@ -168,7 +203,7 @@ def show_user(user_id):
             WHERE id = ?
         """, (user_id,), as_dict=True)
         if user:
-            user[0]['created_at'] = "Unknown"
+            user[0]["created_at"] = "Unknown"
     
     if not user:
         abort(404)

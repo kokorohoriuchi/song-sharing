@@ -13,7 +13,13 @@
         <img src="/image/{{ user.id }}" alt="{{ user.username }}'s profile picture" class="profile-image">
         {% endif %}
         <h1>{{ user.username }}</h1>
-        <p>Member since {{ user.created_at.strftime('%B %Y') }}</p>
+        <p>Member since 
+          {% if user.created_at %}
+            {{ user.created_at.strftime('%B %Y') }}
+          {% else %}
+            Unknown join date
+          {% endif %}
+        </p>
         
         {% if user.id == session.user_id %}
         <a href="/add_image" class="btn btn-outline">Update Profile Picture</a>

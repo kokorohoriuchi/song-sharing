@@ -203,3 +203,35 @@
 .songs-section .badge {
     font-size: 0.8rem;
 }
+
+/* Text wrapping for song info */
+.song-info {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-line;
+}
+
+/* Form input handling */
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.long-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Table cell wrapping */
+.table-cell {
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .table-cell {
+        max-width: 150px;
+    }
+}

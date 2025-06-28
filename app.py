@@ -3,7 +3,7 @@ import os
 import click
 from flask.cli import with_appcontext
 from flask import Flask
-from flask import abort, flash, make_response, redirect, render_template, request, session
+from flask import abort, flash, make_response, redirect, render_template, request, session, url_for
 from functools import wraps
 import markupsafe
 import config, forum, users

@@ -43,4 +43,24 @@ def query(sql, params=(), as_dict=False):
 def last_insert_id():
     """Get the last inserted row ID"""
     return g.get("last_insert_id", None)
+
+def get_user_stats(user_id):
+    """Get statistics for a specific user"""
+    return query("""
+        SELECT 
+            COUNT(songs.id) as song_count,
+            SUM(songs.duration) as total_duration,
+            COUNT(DISTINCT songs.genre) as unique_genres
+        FROM songs
+        WHERE songs.user_id = ?
+    """, (user_id,), as_dict=True)[0]
+
+def get_user_songs(user_id, limit=5):
+    """Get recent songs added by user"""
+    return query("""
+        SELECT * FROM songs
+        WHERE user_id = ?
+        ORDER BY created_at DESC
+        LIMIT ?
+    """, (user_id, limit), as_dict=True)
     

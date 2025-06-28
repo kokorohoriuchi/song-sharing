@@ -17,13 +17,18 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["DATABASE"] = os.path.join(basedir, "instance", "database.db")
 init_db(app)
 
-def require_login(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
-            abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
+def require_login(f=None):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "user_id" not in session:
+                abort(403)
+            return f(*args, **kwargs)
+        return decorated_function
+    
+    if f is None:
+        return decorator
+    return decorator(f)
 
 def get_user_stats(user_id):
     """Get statistics for a specific user"""

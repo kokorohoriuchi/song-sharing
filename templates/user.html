@@ -1,52 +1,89 @@
 {% extends "layout.html" %}
 
-{% block title %}User {{ user.username }}{% endblock %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
+{% endblock %}
 
 {% block content %}
+<div class="user-profile">
+    <div class="profile-header">
+        {% if user.has_image %}
+        <img src="/image/{{ user.id }}" alt="{{ user.username }}'s profile picture" class="profile-image">
+        {% endif %}
+        <h1>{{ user.username }}</h1>
+        <p>Member since {{ user.created_at.strftime('%B %Y') }}</p>
+        
+        {% if user.id == session.user_id %}
+        <a href="/add_image" class="btn btn-outline">Update Profile Picture</a>
+        {% endif %}
+    </div>
 
-<h2>User {{ user.username }}</h2>
+    <div class="stats-container">
+        <h2>Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.song_count }}</div>
+                <div class="stat-label">Songs Shared</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.unique_artists }}</div>
+                <div class="stat-label">Unique Artists</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ stats.unique_genres }}</div>
+                <div class="stat-label">Unique Genres</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ messages|count }}</div>
+                <div class="stat-label">Posts</div>
+            </div>
+        </div>
+    </div>
 
-{% for message in get_flashed_messages() %}
-<p class="info">
-  {{ message }}
-</p>
-{% endfor %}
+    <div class="content-sections">
+        <div class="section">
+            <h2>Recently Added Songs</h2>
+            {% if recent_songs %}
+            <div class="song-list">
+                {% for song in recent_songs %}
+                <div class="song-card">
+                    <h3>{{ song.title }}</h3>
+                    <p class="artist">{{ song.artist }}</p>
+                    {% if song.genres %}
+                    <div class="tags">
+                        {% for genre in song.genres.split(',') %}
+                        <span class="tag">{{ genre }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <a href="/songs/{{ song.id }}/edit" class="btn btn-small">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No songs added yet.</p>
+            {% endif %}
+        </div>
 
-{% if user.has_image %}
-<img src="/image/{{ user.id }}" alt="User {{ user.username }} picture">
-{% endif %}
-
-{% if user.id == session.user_id %}
-<p>
-  <a href="/add_image">Add a profile picture</a>
-</p>
-{% endif %}
-
-<p>
-  User has {{ messages | count }} posts
-</p>
-
-{% if messages %}
-<p>
-  First post at {{ messages[-1].sent_at }}
-</p>
-<p>
-  Last post at {{ messages[0].sent_at }}
-</p>
-{% endif %}
-
-<h3>Posts</h3>
-
-<ul>
-{% for message in messages %}
-  <li>
-    <a href="/thread/{{ message.thread_id }}#{{ message.id }}">
-      {{ message.thread_title }}
-    </a>
-    <br />
-    ({{ message.sent_at }})
-  </li>  
-{% endfor %}
-</ul>
-
+        <div class="section">
+            <h2>Recent Activity</h2>
+            {% if messages %}
+            <ul class="message-list">
+                {% for message in messages %}
+                <li class="message-item">
+                    <a href="/thread/{{ message.thread_id }}#{{ message.id }}" class="message-link">
+                        <span class="thread-title">{{ message.thread_title }}</span>
+                        <span class="message-date">{{ message.sent_at }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No activity yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

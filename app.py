@@ -25,10 +25,13 @@ def init_db_command():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT NOT NULL UNIQUE,
             password_hash TEXT NOT NULL,
-            image BLOB,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            image BLOB
         )
     """)
+    try:
+        execute("ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    except sqlite3.OperationalError:
+        pass
     
     execute("""
         CREATE TABLE IF NOT EXISTS threads (

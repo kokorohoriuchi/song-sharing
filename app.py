@@ -3,7 +3,7 @@ import os
 import click
 from flask.cli import with_appcontext
 from flask import Flask
-from flask import abort, flash, make_response, redirect, render_template, request, session, g
+from flask import abort, flash, make_response, redirect, render_template, request, session
 from functools import wraps
 import markupsafe
 import config, forum, users
@@ -17,17 +17,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config["DATABASE"] = os.path.join(basedir, "instance", "database.db")
 init_db(app)
 
-def require_login(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "user_id" not in session:
+def require_login(view_func):
+    @wraps(view_func)
+    def wrapped_view(*args, **kwargs):
+        if 'user_id' not in session:
             abort(403)
-        return f(*args, **kwargs)
-    return decorated_function
+        return view_func(*args, **kwargs)
+    return wrapped_view
 
-def check_login():
-    """For inline login checks"""
-    if "user_id" not in session:
+def verify_login():
+    if 'user_id' not in session:
         abort(403)
 
 def get_user_stats(user_id):
@@ -251,7 +250,7 @@ def show_thread(thread_id):
 @app.route("/new_thread", methods=["POST"])
 def new_thread():
     check_csrf()
-    check_login()
+    verify_login()
 
     title = request.form["title"]
     content = request.form["content"]
@@ -265,7 +264,7 @@ def new_thread():
 @app.route("/new_message", methods=["POST"])
 def new_message():
     check_csrf()
-    check_login()
+    verify_login()
 
     content = request.form["content"]
     if len(content) > 5000:
@@ -282,7 +281,7 @@ def new_message():
 
 @app.route("/edit/<int:message_id>", methods=["GET", "POST"])
 def edit_message(message_id):
-    check_login()
+    verify_login()
 
     message = forum.get_message(message_id)
     if not message or message["user_id"] != session["user_id"]:
@@ -301,7 +300,7 @@ def edit_message(message_id):
 
 @app.route("/remove/<int:message_id>", methods=["GET", "POST"])
 def remove_message(message_id):
-    check_login()
+    verify_login()
 
     message = forum.get_message(message_id)
     if not message or message["user_id"] != session["user_id"]:
@@ -363,14 +362,14 @@ def login():
 
 @app.route("/logout")
 def logout():
-    check_login()
+    verify_login()
 
     del session["user_id"]
     return redirect("/")
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
-    check_login()
+    verify_login()
 
     if request.method == "GET":
         return render_template("add_image.html")
@@ -495,7 +494,7 @@ def edit_song(song_id):
 
 @app.route("/songs/<int:song_id>/delete", methods=["POST"])
 def delete_song(song_id):
-    check_login()
+    verify_login()
     check_csrf()
     
     song = songs.get_song(song_id)

@@ -414,7 +414,7 @@ def list_songs():
     return render_template("songs/list.html", songs=all_songs)
 
 @app.route("/songs/add", methods=["GET", "POST"])
-@require_login
+@require_login()
 def add_song():
     if request.method == "GET":
         genres = classifications.get_all_genres()
@@ -449,7 +449,7 @@ def add_song():
             return redirect("/songs/add")
 
 @app.route("/songs/<int:song_id>/edit", methods=["GET", "POST"])
-@require_login
+@require_login()
 def edit_song(song_id):
     song = songs.get_song(song_id)
     if not song or song['user_id'] != session['user_id']:

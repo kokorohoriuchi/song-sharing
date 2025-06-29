@@ -2,8 +2,7 @@ CREATE TABLE users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE,
     password_hash TEXT,
-    image BLOB,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    image BLOB
 );
 
 CREATE TABLE threads (

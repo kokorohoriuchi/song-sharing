@@ -76,10 +76,6 @@ def init_db_command():
             image BLOB
         )
     """)
-    try:
-        execute("ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    except sqlite3.OperationalError:
-        pass
     
     execute("""
         CREATE TABLE IF NOT EXISTS threads (
@@ -199,13 +195,12 @@ def show_user(user_id):
     try:
         user = query("""
             SELECT id, username, 
-                   image IS NOT NULL as has_image,
-                   datetime(created_at, 'localtime') as created_at
+                   image IS NOT NULL as has_image
             FROM users 
             WHERE id = ?
         """, (user_id,), as_dict=True)
     except sqlite3.OperationalError as e:
-        print(f"Database error: {e}")  # For debugging
+        print(f"Database error: {e}")  
         user = query("""
             SELECT id, username, 
                    image IS NOT NULL as has_image

@@ -3,7 +3,7 @@
 {% block title %}Add Song{% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/songs.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='songs.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -22,8 +22,7 @@
             <label for="artist">Artist:</label>
             <input type="text" id="artist" name="artist" required class="form-control long-text-input">
         </div>
-        
-        <!-- Add description field -->
+    
         <div class="form-group">
             <label for="description">Description:</label>
             <textarea id="description" name="description" class="form-control long-text-area" 
